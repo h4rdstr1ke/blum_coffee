@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # blum_coffee
 =======
 # React + TypeScript + Vite
@@ -56,3 +57,6 @@ export default tseslint.config({
 })
 ```
 >>>>>>> b409405 (тестовый коммит)
+=======
+# blum_coffee
+>>>>>>> 5138b0fbafa91446bc0fd92cb24683722b7db99b
