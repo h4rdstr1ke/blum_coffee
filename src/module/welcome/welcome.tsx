@@ -3,11 +3,9 @@ type Props = {}
 export default function Welcome({ }: Props) {
     return (
         <div className="w-full px-4 py-8 relative overflow-hidden">
-  {/* Левый круг */}
-  {/*<div className="absolute left-[-50px] right-[-1100px] bottom-[15%] w-[1000px] h-[1000px] bg-[#7EDAFF] rounded-full"></div>*/}
-  
-  {/* Правый круг */}
-  {/*<div className="absolute right-[-110px] bottom-[15%] w-[320px] h-[320px] bg-[#7EDAFF] rounded-full"></div>*/}
+            {/* Основные круги на фоне */}
+            <div className="absolute left-[calc(0%-450px)] top-[calc(10%-300px)] w-[1200px] h-[1200px] bg-[#7EDAFF] rounded-full"></div>
+            <div className="absolute right-[calc(0%-200px)] bottom-[calc(70%-70px)] w-[1200px] h-[1200px] bg-[#7EDAFF] rounded-full"></div>
 
             {/* Мобильная версия (показывается только на маленьких экранах) */}
             <div className="md:hidden flex flex-col items-center relative z-10">
@@ -36,7 +34,7 @@ export default function Welcome({ }: Props) {
                 <img 
                     src="/image/pancake.png" 
                     alt="Панкейк Fluffy" 
-                    className="mt-[142px]" 
+                    className="mt-[150px]" 
                 />
                 
                 {/* Текст справа */}
