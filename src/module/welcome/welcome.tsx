@@ -2,11 +2,17 @@ type Props = {}
 
 export default function Welcome({ }: Props) {
     return (
-        <div className="w-full px-4 py-8">
+        <div className="w-full px-4 py-8 relative overflow-hidden">
+  {/* Левый круг */}
+  {/*<div className="absolute left-[-50px] right-[-1100px] bottom-[15%] w-[1000px] h-[1000px] bg-[#7EDAFF] rounded-full"></div>*/}
+  
+  {/* Правый круг */}
+  {/*<div className="absolute right-[-110px] bottom-[15%] w-[320px] h-[320px] bg-[#7EDAFF] rounded-full"></div>*/}
+
             {/* Мобильная версия (показывается только на маленьких экранах) */}
-            <div className="md:hidden flex flex-col items-center">
+            <div className="md:hidden flex flex-col items-center relative z-10">
                 {/* Заголовок сверху */}
-                <h1 className="text-[#7EDAFF] font-bold text-3xl text-center mb-8">
+                <h1 className="text-[#7EDAFF] font-bold text-3xl text-center mb-8 ">
                     Добро пожаловать в <span className="text-5xl">Fluffy!</span>
                 </h1>
                 
@@ -25,7 +31,7 @@ export default function Welcome({ }: Props) {
             </div>
 
             {/* Десктопная версия (показывается на средних и больших экранах) */}
-            <div className="hidden md:flex w-full p-4 items-center justify-between relative">
+            <div className="hidden md:flex w-full p-4 items-center justify-between relative z-10">
                 {/* Картинка слева */}
                 <img 
                     src="/image/pancake.png" 
