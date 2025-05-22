@@ -3,9 +3,11 @@ type Props = {}
 export default function Welcome({ }: Props) {
     return (
         <div className="w-full px-4 py-8 relative overflow-hidden">
-            {/* Основные круги на фоне */}
-            <div className="absolute left-[calc(0%-450px)] top-[calc(10%-300px)] w-[1200px] h-[1200px] bg-[#7EDAFF] rounded-full"></div>
-            <div className="absolute right-[calc(0%-200px)] bottom-[calc(70%-70px)] w-[1200px] h-[1200px] bg-[#7EDAFF] rounded-full"></div>
+      {/* Левый круг */}
+      <div className="welcome-bg-circle left"></div>
+      
+      {/* Правый круг */}
+      <div className="welcome-bg-circle right"></div>
 
             {/* Мобильная версия (показывается только на маленьких экранах) */}
             <div className="md:hidden flex flex-col items-center relative z-10">

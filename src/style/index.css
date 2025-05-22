@@ -105,3 +105,142 @@ body{
   z-index: -1;
 }
 /*-----------*/
+
+/*-----Круги в HomePage (welcome.tsx)------*/
+/* Круги на фоне */
+.welcome-bg-circle {
+  position: absolute;
+  background-color: #7EDAFF;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* Левый круг */
+.welcome-bg-circle.left {
+  /* Мобильные (до 640px) */
+  width: 200px;
+  height: 200px;
+  left: -80px;
+  transform: translateY(-100px);
+  
+  /* sm (≥640px) */
+  @media (min-width: 640px) {
+    width: 250px;
+    height: 250px;
+    left: -100px;
+    top: 40px;
+    transform: translateY(-100px); 
+  }
+  
+  /* md (≥768px) */
+  @media (min-width: 768px) {
+    width: 300px;
+    height: 300px;
+    left: -120px;
+    top: 50px;
+    transform: translateY(-100px);
+  }
+  
+  /* lg (≥1024px) */
+  @media (min-width: 1024px) {
+    width: 350px;
+    height: 350px;
+    left: -150px;
+    top: 70px;
+    transform: translateY(-100px);
+  }
+  
+  /* xl (≥1280px) */
+  @media (min-width: 1280px) {
+    width: 75%;
+    height: 1200px;
+    left: -300px;
+    transform: translateY(-375px);
+  }
+  
+  /* 2xl (≥1536px) */
+  @media (min-width: 1536px) {
+    width: 70%;
+    height: 1200px;
+    left: -350px;
+    transform: translateY(-400px);
+  }
+  
+  /* 3xl (≥1920px) - кастомный брейкпоинт */
+  @media (min-width: 1920px) {
+    width: 500px;
+    height: 500px;
+    left: -250px;
+  }
+  
+  /* 4xl (≥2560px) - кастомный брейкпоинт */
+  @media (min-width: 2560px) {
+    width: 600px;
+    height: 600px;
+    left: -300px;
+  }
+}
+
+/* Правый круг */
+.welcome-bg-circle.right {
+  /* Мобильные (до 640px) */
+  width: 180px;
+  height: 180px;
+  right: -70px;
+  bottom: 20px;
+  
+  /* sm (≥640px) */
+  @media (min-width: 640px) {
+    width: 220px;
+    height: 220px;
+    right: -90px;
+  }
+  
+  /* md (≥768px) */
+  @media (min-width: 768px) {
+    width: 260px;
+    height: 260px;
+    right: -110px;
+    transform: translateY(-500px);
+  }
+  
+  /* lg (≥1024px) */
+  @media (min-width: 1024px) {
+    width: 300px;
+    height: 300px;
+    right: -140px;
+    transform: translateY(-500px);
+  }
+  
+  /* xl (≥1280px) */
+  @media (min-width: 1280px) {
+    width: 75%;
+    height: 1000px;
+    right: -170px;
+    transform: translateY(-500px);
+  }
+  
+  /* 2xl (≥1536px) */
+  @media (min-width: 1536px) {
+    width: 75%;
+    height: 1300px;
+    right: -175px;
+    transform: translateY(-435px);
+  }
+  
+  /* 3xl (≥1920px) - кастомный брейкпоинт */
+  @media (min-width: 1920px) {
+    width: 450px;
+    height: 450px;
+    right: -230px;
+    transform: translateY(-500px);
+  }
+  
+  /* 4xl (≥2560px) - кастомный брейкпоинт */
+  @media (min-width: 2560px) {
+    width: 550px;
+    height: 550px;
+    right: -280px;
+    transform: translateY(-500px);
+  }
+}
