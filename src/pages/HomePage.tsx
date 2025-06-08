@@ -6,13 +6,14 @@ import Footer from "../module/footer/footer"
 
 type Props = {}
 
-export default function HomePage({}: Props) {
+export default function HomePage({ }: Props) {
   return (
     <div className="max-w-[] m-auto ">
       <Header />
       <Welcome />
       <Delivery />
       <Location />
+      <Footer />
     </div>
   )
 }

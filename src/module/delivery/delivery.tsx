@@ -4,7 +4,7 @@ type Props = {}
 
 export default function Delivery({ }: Props) {
   return (
-    <div className="w-full mt-10 px-4 border">
+    <div className="w-full mt-10 px-4">
       {/* Общий контейнер */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 max-w-screen-xl mx-auto">
         
@@ -15,7 +15,7 @@ export default function Delivery({ }: Props) {
             <img 
               src="/image/yandex_mobile.svg" 
               alt="Yandex Eats" 
-              className="w-[70%] max-w-[500px] border" 
+              className="w-[70%] max-w-[500px]" 
             />
           </div>
           
@@ -24,7 +24,7 @@ export default function Delivery({ }: Props) {
             <img 
               src="/image/delivery_mobile.svg" 
               alt="Delivery Club" 
-              className="w-[70%] max-w-[500px] border" 
+              className="w-[70%] max-w-[500px]" 
             />
           </div>
 
@@ -56,7 +56,7 @@ export default function Delivery({ }: Props) {
             <img 
               src="/image/taste_mobile.svg" 
               alt="Вкусные блюда" 
-              className="w-full border" 
+              className="w-full" 
             />
           </div>
           
@@ -64,7 +64,7 @@ export default function Delivery({ }: Props) {
           <img 
             src="/image/taste.svg" 
             alt="Вкусные блюда" 
-            className="hidden md:block w-full max-w-[960px] border" 
+            className="hidden md:block w-full max-w-[960px]" 
           />
           <div className="hidden md:block text-center mt-4">
             <p className="text-[#FD744C] font-bold text-[60px] leading-tight">

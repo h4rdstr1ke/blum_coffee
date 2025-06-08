@@ -3,244 +3,185 @@
 @tailwind utilities;
 
 
+
+@supports not (height: 100dvh) {
+  .welcome-container {
+    height: calc(100vh - 5rem) !important;
+  }
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+
+}
+
 /*Для плавного масшарбирования*/
 img {
   transition: height 0.3s ease;
 }
-/*{
+
+/* {
   border: 1px solid black;
 }
-body{
+
+body {
   overflow-x: hidden
 }
 
-/*main*/
-.krug:after{
-  top: -245px;
-  transform: translateX(-58%);
-  content: '';
-  position: absolute;
-  width: 1700px;
-  height: 1500px;
-  border-radius: 50%;
-  background-color: #7EDAFF;
-  z-index: -1;
-  clip-path: inset(0px 0px 364px 0px);
-  
-}
 
-.krug2:after{
-  top: -650px;
-  transform: translateX(10%);
-  content: '';
-  position: absolute;
-  width: 1600px;
-  height: 1031px;
-  border-radius: 50%;
-  background-color: #7EDAFF;
-  z-index: -1;
-  clip-path: inset(0px 0px 0px 0px);
-  
-}
 
-/*
-.devkrug:after{
-  left: 195px;
-  transform: skew(-35deg);
-  top: 1157px;
-  content: '';
-  position: absolute;
-  width: 468px;
-  height: 233px;
-  border-radius: 50%;
-  background-color: #7EDAFF;
-  z-index: -1;
-}
-
-.devkrug2{
-  left: 195px;
-  transform: skew(-35deg);
-  top: 1450px;
-  content: '';
-  position: absolute;
-  width: 468px;
-  height: 233px;
-  border-radius: 50%;
-  background-color: #7EDAFF;
-  z-index: -1;
-}
-*/
-.moti{
-  position: absolute;
-}
-
-.kotik{
-  right: -830px;
-  position: absolute;
-}
-
-.oval1:after{
-  left: -400px;
-  
-  top: 1940px;
-  content: '';
-  position: absolute;
-  width: 700px;
-  height: 1100px;
-  border-radius: 50%;
-  background-color: #7EDAFF;
-  z-index: -1;
-}
-
-.oval2:after{
-  right: -400px;
-  
-  top: 1940px;
-  content: '';
-  position: absolute;
-  width: 700px;
-  height: 1100px;
-  border-radius: 50%;
-  background-color: #7EDAFF;
-  z-index: -1;
-}
-/*-----------*/
-
-/*-----Круги в HomePage (welcome.tsx)------*/
-/* Круги на фоне */
+/*----- Основные стили (как у вас в исходном коде) -----*/
 .welcome-bg-circle {
   position: absolute;
   background-color: #7EDAFF;
   border-radius: 50%;
   z-index: 0;
+  transition: all 0.4s ease-out;
 }
 
+/*----- ПК-версия -----*/
 /* Левый круг */
 .welcome-bg-circle.left {
-  /* Мобильные (до 640px) */
-  width: 200px;
-  height: 200px;
-  left: -80px;
-  transform: translateY(-100px);
-  
-  /* sm (≥640px) */
-  @media (min-width: 640px) {
-    width: 250px;
-    height: 250px;
-    left: -100px;
-    top: 40px;
-    transform: translateY(-100px); 
-  }
-  
-  /* md (≥768px) */
-  @media (min-width: 768px) {
-    width: 300px;
-    height: 300px;
-    left: -120px;
-    top: 50px;
-    transform: translateY(-100px);
-  }
-  
-  /* lg (≥1024px) */
-  @media (min-width: 1024px) {
-    width: 350px;
-    height: 350px;
-    left: -150px;
-    top: 70px;
-    transform: translateY(-100px);
-  }
-  
-  /* xl (≥1280px) */
-  @media (min-width: 1280px) {
-    width: 75%;
-    height: 1200px;
-    left: -300px;
-    transform: translateY(-375px);
-  }
-  
-  /* 2xl (≥1536px) */
-  @media (min-width: 1536px) {
-    width: 70%;
-    height: 1200px;
-    left: -350px;
-    transform: translateY(-400px);
-  }
-  
-  /* 3xl (≥1920px) - кастомный брейкпоинт */
-  @media (min-width: 1920px) {
-    width: 500px;
-    height: 500px;
-    left: -250px;
-  }
-  
-  /* 4xl (≥2560px) - кастомный брейкпоинт */
-  @media (min-width: 2560px) {
-    width: 600px;
-    height: 600px;
-    left: -300px;
-  }
+  width: calc(100vw + 500px);
+  height: calc(100vw + 500px);
+  left: calc(-50vw - 300px);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Правый круг */
 .welcome-bg-circle.right {
-  /* Мобильные (до 640px) */
-  width: 180px;
-  height: 180px;
-  right: -70px;
-  bottom: 20px;
-  
-  /* sm (≥640px) */
-  @media (min-width: 640px) {
-    width: 220px;
-    height: 220px;
-    right: -90px;
+  width: calc(80vw + 300px);
+  height: calc(80vw + 300px);
+  right: calc(-40vw - 150px);
+  bottom: 60%;
+}
+
+/* медиа-запросы для ПК */
+@media (min-width: 768px) {
+  .welcome-bg-circle.left {
+    width: calc(100vw + 800px);
+    height: calc(100vw + 800px);
+    left: calc(-50vw - 800px);
   }
-  
-  /* md (≥768px) */
-  @media (min-width: 768px) {
-    width: 260px;
-    height: 260px;
-    right: -110px;
-    transform: translateY(-500px);
+
+  .welcome-bg-circle.right {
+    width: calc(80vw + 500px);
+    height: calc(80vw + 500px);
+    right: calc(-25vw - 50px);
   }
-  
-  /* lg (≥1024px) */
-  @media (min-width: 1024px) {
-    width: 300px;
-    height: 300px;
-    right: -140px;
-    transform: translateY(-500px);
+}
+
+@media (min-width: 1280px) {
+  .welcome-bg-circle.left {
+    width: calc(100vw + 1200px);
+    height: calc(100vw + 1200px);
+    left: calc(-50vw - 1300px);
   }
-  
-  /* xl (≥1280px) */
-  @media (min-width: 1280px) {
-    width: 75%;
-    height: 1000px;
-    right: -170px;
-    transform: translateY(-500px);
+}
+
+/*портретный режим */
+@media (orientation: portrait) {
+  .welcome-bg-circle.right {
+    width: calc(80vw + 600px);
+    height: calc(80vw + 600px);
+    right: calc(-20vw - 50px);
+    bottom: 80%;
   }
-  
-  /* 2xl (≥1536px) */
-  @media (min-width: 1536px) {
-    width: 75%;
-    height: 1300px;
-    right: -175px;
-    transform: translateY(-435px);
+}
+
+/*----- МОБИЛЬНАЯ АДАПТАЦИЯ (только < 768px) -----*/
+@media (max-width: 767px) {
+
+  /* Левый круг ) */
+  .welcome-bg-circle.left {
+    width: calc(100vw + 200px);
+    height: calc(100vw + 200px);
+    left: 50%;
+    top: 60%;
+    bottom: -50%;
+    transform: translateX(-50%);
   }
-  
-  /* 3xl (≥1920px) - кастомный брейкпоинт */
-  @media (min-width: 1920px) {
-    width: 450px;
-    height: 450px;
-    right: -230px;
-    transform: translateY(-500px);
+
+  /* Правый круг - фиксированный отступ от низа */
+  .welcome-bg-circle.right {
+    width: calc(100vw + 200px);
+    height: calc(100vw + 200px);
+    left: 50%;
+    bottom: 500px;
+    /*  фиксированный отступ */
+    top: auto;
+    right: auto;
+    transform: translateX(-50%);
   }
-  
-  /* 4xl (≥2560px) - кастомный брейкпоинт */
-  @media (min-width: 2560px) {
-    width: 550px;
-    height: 550px;
-    right: -280px;
-    transform: translateY(-500px);
+}
+
+
+
+/* Основные стили для десктопной ориентации */
+/* Десктопная версия - горизонтальная ориентация */
+.welcome-desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .welcome-desktop {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Панкейк - по умолчанию (альбомная ориентация) */
+  .pancake-container {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: all 0.3s ease;
+  }
+
+  .pancake-image {
+    width: 35vw;
+    min-width: 550px;
+    max-width: 800px;
+    height: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+  }
+
+  /* Текст - по умолчанию (альбомная ориентация) */
+  .text-block {
+    position: absolute;
+    right: 5vw;
+    bottom: 8vh;
+    width: clamp(300px, 45%, 900px);
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  /* Портретная ориентация (высота > ширины) */
+  @media (orientation: portrait) {
+    .pancake-container {
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .pancake-image {
+      width: 30vw;
+      min-width: 450px;
+      max-width: 600px;
+    }
+
+    .text-block {
+      bottom: auto;
+      top: 50%;
+      right: 5vw;
+      transform: translateY(-50%);
+      width: clamp(300px, 40%, 800px);
+    }
   }
 }
