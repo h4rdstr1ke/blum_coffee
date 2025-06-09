@@ -1,37 +1,49 @@
-import { useState } from 'react';
+import { textStylesFooter } from '../../style/textStyles';
 
-type Props = {}
-
-export default function Footer({ }: Props) {
-  
-
+export default function Footer() {
   return (
-    <div className='w-full flex flex-raw mt-[266px] mb-[50px]'>
-        <div className='w-full flex flex-col'>
-          <img src="/image/logo2.png" alt="" className='w-[266px] pb-[55px]'/>
-          <div className='flex flex-row gap-12'>
-            <img src="/image/tg.png" alt="" />
-            <img src="/image/tt.png" alt="" />
-            <img src="/image/inst.png" alt="" />
+    <footer className="w-full px-4 md:px-0 py-8 md:py-12 bg-white">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Логотип и соцсети */}
+        <div className="flex flex-col items-center md:items-start">
+          <img
+            src="/image/logo2.png"
+            alt="Логотип"
+            className="w-40 md:w-[266px] pb-6 md:pb-[55px]"
+          />
+          <div className="flex gap-4 md:gap-6">
+            <a href="#" aria-label="Telegram">
+              <img src="/image/tg.png" alt="Telegram" className="w-8 md:w-10" />
+            </a>
+            <a href="#" aria-label="TikTok">
+              <img src="/image/tt.png" alt="TikTok" className="w-8 md:w-10" />
+            </a>
+            <a href="#" aria-label="Instagram">
+              <img src="/image/inst.png" alt="Instagram" className="w-8 md:w-10" />
+            </a>
           </div>
         </div>
 
-        <div className='w-full flex flex-col font-bold mt-[45px]'>
-          <p className='text-[#B8B8B8] text-[35px]'>Ждём вас у нас</p>
-          <p className='text-[#B8B8B8] text-[35px]'>с 10 до 22</p>
+        {/* Часы работы */}
+        <div className="flex flex-col items-center md:items-start">
+          <p className={`${textStylesFooter.footerText} mb-2 md:mb-4`}>Ждём вас у нас</p>
+          <p className={textStylesFooter.footerText}>с 10 до 22</p>
         </div>
 
-        <div className='w-full flex flex-col justify-between gap-2 font-bold'>
-          <p className='text-[#B8B8B8] text-[35px]'>Главная</p>
-          <p className='text-[#B8B8B8] text-[35px]'>Меню</p>
-          <p className='text-[#B8B8B8] text-[35px]'>Доставка</p>
+        {/* Основные ссылки */}
+        <div className="flex flex-col items-center md:items-start gap-2 md:gap-4">
+          <a href="#" className={textStylesFooter.footerLink}>Главная</a>
+          <a href="#" className={textStylesFooter.footerLink}>Меню</a>
+          <a href="#" className={textStylesFooter.footerLink}>Доставка</a>
         </div>
 
-        <div className='w-full flex flex-col justify-between gap-2 font-bold'>
-          <p className='text-[#B8B8B8] text-[35px]'>Сайт франшизы</p>
-          <p className='text-[#B8B8B8] text-[35px]'>8 (905)231 38 55</p>
-          <p className='text-[#B8B8B8] text-[35px]'>Разработчики блум</p>
+        {/* Контакты */}
+        <div className="flex flex-col items-center md:items-start gap-2 md:gap-4">
+          <a href="#" className={textStylesFooter.footerLink}>Сайт франшизы</a>
+          <a href="tel:89052313855" className={textStylesFooter.footerLink}>8 (905) 231 38 55</a>
+          <a href="#" className={textStylesFooter.footerLink}>Разработчики Bloom</a>
         </div>
-    </div>
+      </div>
+    </footer>
   );
 }

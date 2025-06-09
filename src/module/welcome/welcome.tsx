@@ -35,7 +35,7 @@ export default function Welcome() {
         </div>
 
         {/* Текст */}
-        <div className="text-block">
+        <div className="text-block ">
           <p className="text-white md:text-[#7EDAFF] font-bold text-[min(4.5vw,45px)] leading-tight">
             Добро пожаловать в <span className="text-[min(6.5vw,65px)]">Fluffy!</span>
           </p>

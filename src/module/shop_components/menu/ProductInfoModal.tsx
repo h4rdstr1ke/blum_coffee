@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { textStylesShop } from "../../../style/textStyles";
 
 type ProductInfo = {
     weight: string;
@@ -14,6 +15,7 @@ type Props = {
     onClose: () => void;
     product: {
         title: string;
+        src: string;
         info: ProductInfo;
     };
 };
@@ -22,52 +24,79 @@ export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-                <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-2xl font-bold">{product.title}</h3>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 text-2xl hover:text-gray-700"
-                        aria-label="Закрыть"
-                    >
-                        ×
-                    </button>
-                </div>
+        <>
+            {/* Затемнение фона */}
+            <div
+                className="fixed inset-0 z-40 bg-[rgba(0,0,0,0.5)]"
+                onClick={onClose}
+            />
 
-                <p className="text-gray-600 mb-2">{product.info.weight}</p>
+            {/* Модальное окно */}
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl shadow-xl w-full max-w-[800px] max-h-[90vh] overflow-hidden">
+                {/* Кнопка закрытия */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-50"
+                    aria-label="Закрыть"
+                >
+                    ×
+                </button>
 
-                <div className="mb-4">
-                    <h4 className="font-semibold mb-1">Состав:</h4>
-                    <ul className="list-disc pl-5">
-                        {product.info.composition.map((ingredient, index) => (
-                            <li key={index}>{ingredient}</li>
-                        ))}
-                    </ul>
-                </div>
+                <div className="flex flex-col h-full">
+                    {/* Верхняя часть: изображение + описание */}
+                    <div className="flex flex-1 overflow-hidden">
+                        {/* Изображение */}
+                        <div className="w-1/2 h-auto max-h-[400px] overflow-hidden">
+                            <img
+                                src={product.src}
+                                alt={product.title}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
 
-                <div>
-                    <h4 className="font-semibold mb-1">Пищевая ценность на 100 г:</h4>
-                    <div className="grid grid-cols-4 gap-2 text-center">
-                        <div>
-                            <p className="font-bold">{product.info.calories}</p>
-                            <p className="text-sm">ккал</p>
+                        {/* Описание */}
+                        <div className="w-1/2 p-6 overflow-y-auto">
+                            <h3 className={`${textStylesShop.modalTitle} mb-4`}>{product.title}</h3>
+
+                            <p className={`${textStylesShop.modalText} mb-4`}>
+                                <span className={`${textStylesShop.modalLabel}`}>Вес:</span> {product.info.weight}
+                            </p>
+
+                            <div>
+                                <h4 className={`${textStylesShop.modalLabel} mb-2`}>Состав:</h4>
+                                <ul className="list-disc pl-5 space-y-1">
+                                    {product.info.composition.map((ingredient, index) => (
+                                        <li key={index} className="text-gray-600">{ingredient}</li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-bold">{product.info.proteins}</p>
-                            <p className="text-sm">белки</p>
-                        </div>
-                        <div>
-                            <p className="font-bold">{product.info.fats}</p>
-                            <p className="text-sm">жиры</p>
-                        </div>
-                        <div>
-                            <p className="font-bold">{product.info.carbs}</p>
-                            <p className="text-sm">углеводы</p>
+                    </div>
+
+                    {/* Нижняя часть: пищевая ценность */}
+                    <div className="p-6 border-t bg-gray-50">
+                        <h4 className="font-semibold text-gray-800 mb-3">Пищевая ценность на 100 г:</h4>
+                        <div className="grid grid-cols-4 gap-2">
+                            <div className="bg-white p-2 rounded text-center shadow-sm">
+                                <p className={`${textStylesShop.modalValue}`}>{product.info.calories}</p>
+                                <p className={`${textStylesShop.modalSmallText} mt-1`}>ккал</p>
+                            </div>
+                            <div className="bg-white p-2 rounded text-center shadow-sm">
+                                <p className={`${textStylesShop.modalValue}`}>{product.info.proteins}</p>
+                                <p className={`${textStylesShop.modalSmallText} mt-1`}>белки</p>
+                            </div>
+                            <div className="bg-white p-2 rounded text-center shadow-sm">
+                                <p className={`${textStylesShop.modalValue}`}>{product.info.fats}</p>
+                                <p className={`${textStylesShop.modalSmallText} mt-1`}>жиры</p>
+                            </div>
+                            <div className="bg-white p-2 rounded text-center shadow-sm">
+                                <p className={`${textStylesShop.modalValue}`}>{product.info.carbs}</p>
+                                <p className={`${textStylesShop.modalSmallText} mt-1`}>углеводы</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };

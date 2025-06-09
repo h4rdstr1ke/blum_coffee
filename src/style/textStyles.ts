@@ -35,3 +35,50 @@ export const textStylesGuest = {
     label: "font-bold text-white",
     loadingText: "text-center py-8"
 } as const;
+
+export const textStylesShop = {
+    // Заголовки секций
+    sectionTitle: "forma-textRegular text-center text-[#7EDAFF] text-2xl md:text-[43px] font-bold",
+    sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-3xl md:text-[48px] font-bold",
+
+    // Карточки продуктов
+    productTitle: "text-white text-xl md:text-3xl font-bold",
+    productPrice: "text-white text-lg md:text-2xl font-bold",
+
+    // Кнопки
+    infoButton: "text-gray font-bold text-sm",
+    addButton: "text-white text-base md:text-xl font-bold",
+
+    // Модальное окно
+    modalTitle: "text-2xl font-bold text-gray-800",
+    modalLabel: "font-semibold text-gray-800",
+    modalText: "text-gray-600",
+    modalValue: "font-bold text-[#39C6FF]",
+    modalSmallText: "text-xs text-gray-500",
+
+} as const;
+
+export const textStylesCart = {
+    // Заголовки
+    cartTitle: "text-2xl md:text-3xl font-bold text-[#39C6FF]",
+
+    // Товары в корзине
+    itemName: "text-lg md:text-xl font-medium text-white",
+    itemPrice: "text-lg md:text-xl font-bold text-white",
+    itemQuantity: "text-base md:text-lg text-white",
+
+    // Итого
+    totalLabel: "text-xl md:text-2xl font-bold text-[#39C6FF]",
+    totalPrice: "text-xl md:text-2xl font-bold text-white",
+
+    // Кнопки
+    checkoutButton: "text-lg md:text-xl font-bold text-white bg-[#39C6FF]",
+    clearButton: "text-base md:text-lg text-gray-300 hover:text-white"
+} as const;
+
+
+export const textStylesFooter = {
+
+    footerText: "text-[#B8B8B8] text-xl md:text-[35px] font-bold text-center md:text-left",
+    footerLink: "text-[#B8B8B8] text-lg md:text-[35px] font-bold hover:text-[#39C6FF] transition-colors text-center md:text-left"
+} as const;

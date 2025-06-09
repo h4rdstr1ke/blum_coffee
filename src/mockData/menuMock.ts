@@ -33,7 +33,15 @@ export const menuData = [
                     id: 4,
                     title: 'Панкейк нутелла банан',
                     price: '700₽',
-                    src: "../../public/image/test.png"
+                    src: "../../public/image/test.png",
+                    info: { // Добавляем новое поле с информацией
+                        weight: '210г',
+                        composition: ['Панкейки', 'Маскарпоне', 'Клубника'],
+                        calories: '230 ккал',
+                        proteins: '13г',
+                        fats: '21г',
+                        carbs: '25г'
+                    }
                 },
                 {
                     id: 5,
@@ -63,7 +71,15 @@ export const menuData = [
                     id: 2,
                     title: 'Чизкейк 1/4 ягодный',
                     price: '640₽',
-                    src: '/image/pank1.png'
+                    src: '../../public/image/test2.png',
+                    info: { // Добавляем новое поле с информацией
+                        weight: '210г',
+                        composition: ['Панкейки', 'Маскарпоне', 'Клубника'],
+                        calories: '230 ккал',
+                        proteins: '13г',
+                        fats: '21г',
+                        carbs: '25г'
+                    }
                 },
                 {
                     id: 3,
