@@ -2,7 +2,7 @@ import { textStylesFooter } from '../../style/textStyles';
 
 export default function Footer() {
   return (
-    <footer className="w-full px-4 md:px-0 py-8 md:py-12 bg-white">
+    <footer className="w-full px-4 md:px-0 py-8 md:py-12 bg-white mt-35">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Логотип и соцсети */}
         <div className="flex flex-col items-center md:items-start">

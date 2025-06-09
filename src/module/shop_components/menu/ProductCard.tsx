@@ -59,7 +59,7 @@ export default function ProductCard({ item }: Props) {
                 </p>
 
                 {/* Кнопка добавить */}
-                <button className={`${textStylesShop.addButton} bg-[#39C6FF] py-1 md:py-2 px-4 md:px-6 rounded-lg md:rounded-xl`}>
+                <button className={`${textStylesShop.addButton} bg-[#39C6FF] py-1 md:py-1 px-4 md:px-6 rounded-lg md:rounded-xl flex`}>
                     + Добавить
                 </button>
             </div>

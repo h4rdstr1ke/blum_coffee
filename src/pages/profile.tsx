@@ -7,10 +7,12 @@ type Props = {}
 
 export default function Profile({ }: Props) {
   return (
-    <div className="max-w-[1543px] m-auto ">
+    <div className="">
       <Header />
-      <Guest />
-      <History />
+      <div className="max-w-[1440px] m-auto">
+        <Guest />
+        <History />
+      </div>
     </div>
   )
 }
