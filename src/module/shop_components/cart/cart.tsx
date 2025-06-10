@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useCart } from '../../../context/CartContext';
 
 export default function Cart() {
   const [isAnimating, setIsAnimating] = useState(false);
+  const { totalItems } = useCart();
 
-  // Анимация при клике
   const handleClick = () => {
     setIsAnimating(true);
     const timer = setTimeout(() => setIsAnimating(false), 800);
@@ -31,11 +32,14 @@ export default function Cart() {
           }}
           transition={{ duration: 0.8 }}
         >
-          <img
-            src="/image/cart.svg"
-            alt="Корзина"
-            className="w-10 h-10"
-          />
+          <div className="relative">
+            <img src="/image/cart.svg" alt="Корзина" className="w-10 h-10" />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </div>
         </motion.div>
         <span className="text-3xl md:text-[40px] font-bold">Корзина</span>
       </Link>

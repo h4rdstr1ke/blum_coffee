@@ -7,7 +7,7 @@ type Props = {
     items: Array<{
         id: number
         title: string
-        price: string
+        price: number
         src: string
     }>
 }

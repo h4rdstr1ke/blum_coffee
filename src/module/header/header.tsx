@@ -56,7 +56,7 @@ export default function Header({ }: Props) {
             <div className={textStylesHeader.scheduleTime}>ПН-ВС 10:00-22:00</div>
           </div>
 
-          <Link to="/shop" className={textStylesHeader.navLink}>ДОСТАВКА</Link>
+          <Link to="/cart" className={textStylesHeader.navLink}>ДОСТАВКА</Link>
           <Link to="/shop" className={textStylesHeader.navLink}>МЕНЮ</Link>
           <a className={textStylesHeader.navLink} href="#contacts">КОНТАКТЫ</a>
 

@@ -1,46 +1,29 @@
 import { useState, useEffect } from 'react';
 import { mockProfile, mockSaveProfile, mockLoadProfile, ProfileData } from '../../mockData/profileMock';
 import { textStylesGuest } from "../../style/textStyles";
+import { useUser } from '../../context/UserContext';
 
 export default function Guest() {
-  const [formData, setFormData] = useState<ProfileData>({
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone_number: ''
-  });
+  const { userData, loadUserData } = useUser();
+  const [formData, setFormData] = useState<ProfileData>({ ...userData });
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const loadProfile = async () => {
-      setIsLoading(true);
-      try {
-        const data = await mockLoadProfile();
-        setFormData(data);
-      } catch (error) {
-        console.error("Ошибка загрузки профиля:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProfile();
-  }, []);
+    setFormData({ ...userData });
+  }, [userData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       const result = await mockSaveProfile(formData);
       if (result.success) {
-        alert("Профиль успешно сохранён!");
+        await loadUserData();
         setIsEditing(false);
       }
     } catch (error) {
       console.error("Ошибка сохранения:", error);
-      alert("Ошибка при сохранении профиля!");
     } finally {
       setIsLoading(false);
     }
@@ -48,20 +31,7 @@ export default function Guest() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsEditing(true);
-  };
-
-  const handleCancel = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsEditing(false);
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   if (isLoading && !isEditing) {
@@ -70,9 +40,7 @@ export default function Guest() {
 
   return (
     <div className='w-full px-4 mx-auto mt-10'>
-      <h1 className={textStylesGuest.title}>
-        Профиль
-      </h1>
+      <h1 className={textStylesGuest.title}>Профиль</h1>
       <div className='w-full px-4 mx-auto max-w-4xl'>
         <form onSubmit={handleSubmit} className={textStylesGuest.label}>
           <div className='flex flex-col md:flex-row md:flex-wrap gap-6 md:gap-8'>
@@ -81,23 +49,22 @@ export default function Guest() {
                 <input
                   type="text"
                   name="first_name"
-                  className={textStylesGuest.input}
-                  placeholder='Имя'
                   value={formData.first_name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  className={textStylesGuest.input}
+                  placeholder='Имя'
                 />
               </div>
-
               <div className='flex-1'>
                 <input
                   type="text"
                   name="last_name"
-                  className={textStylesGuest.input}
-                  placeholder='Фамилия'
                   value={formData.last_name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  className={textStylesGuest.input}
+                  placeholder='Фамилия'
                 />
               </div>
             </div>
@@ -107,23 +74,22 @@ export default function Guest() {
                 <input
                   type="email"
                   name="email"
-                  className={textStylesGuest.input}
-                  placeholder='Email'
                   value={formData.email}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  className={textStylesGuest.input}
+                  placeholder='Email'
                 />
               </div>
-
               <div className='flex-1'>
                 <input
                   type="tel"
                   name="phone_number"
-                  className={textStylesGuest.input}
-                  placeholder='Номер телефона'
                   value={formData.phone_number}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  className={textStylesGuest.input}
+                  placeholder='Номер телефона'
                 />
               </div>
             </div>
@@ -133,9 +99,8 @@ export default function Guest() {
             {!isEditing ? (
               <button
                 type="button"
-                onClick={handleEdit}
+                onClick={() => setIsEditing(true)}
                 className={textStylesGuest.buttonEdit}
-                disabled={isLoading}
               >
                 Редактировать
               </button>
@@ -150,9 +115,8 @@ export default function Guest() {
                 </button>
                 <button
                   type="button"
-                  onClick={handleCancel}
+                  onClick={() => setIsEditing(false)}
                   className={textStylesGuest.buttonCancel}
-                  disabled={isLoading}
                 >
                   Отмена
                 </button>
