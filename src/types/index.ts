@@ -17,10 +17,10 @@ export interface CartItem extends Product {
     quantity: number;
 }
 
-export interface OrderItem {
+export interface HistoryOrderItem {
     id: number;
     name: string;
-    price: number;
+    price: number; // Цена на момент заказа
     quantity: number;
     image: string;
 }
@@ -28,8 +28,7 @@ export interface OrderItem {
 export interface Order {
     id: number;
     date: string;
-    total: number;
-    items: OrderItem[];
+    items: HistoryOrderItem[];
 }
 
 export interface ProfileData {
@@ -37,4 +36,20 @@ export interface ProfileData {
     last_name: string;
     email: string;
     phone_number: string;
+}
+
+// типы для доставки
+export interface DeliveryOptions {
+    timeOption: 'asap' | 'later';
+    deliveryTime: string;
+    paymentMethod: 'cash' | 'card';
+    address?: string;
+    comment?: string;
+}
+
+export interface OrderDetails {
+    user: ProfileData;
+    items: CartItem[];
+    delivery: DeliveryOptions;
+    total: number;
 }

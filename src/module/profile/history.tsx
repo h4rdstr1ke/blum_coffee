@@ -1,8 +1,22 @@
 import { useCart } from '../../context/CartContext';
 import { Order } from '../../types/index';
+import { menuData } from '../../mockData/menuMock';
+import { textStylesHistory } from '../../style/textStyles';
 
-export default function History({ orders }: { orders: Order[] }) {
+interface HistoryProps {
+  orders: Order[];
+}
+
+export default function History({ orders }: HistoryProps) {
   const { addToCart, clearCart } = useCart();
+
+  const findCurrentProduct = (id: number) => {
+    for (const category of menuData) {
+      const product = category.items.find(item => item.id === id);
+      if (product) return product;
+    }
+    return null;
+  };
 
   const handleRepeatOrder = (items: Order['items']) => {
     if (items.length === 0) return;
@@ -10,27 +24,43 @@ export default function History({ orders }: { orders: Order[] }) {
     if (confirm(`Добавить ${items.length} товаров в корзину?`)) {
       clearCart();
       items.forEach(item => {
-        addToCart({
-          id: item.id,
-          title: item.name,
-          price: item.price,
-          src: item.image
-        });
+        const currentProduct = findCurrentProduct(item.id);
+        if (currentProduct) {
+          addToCart({
+            id: currentProduct.id,
+            title: currentProduct.title,
+            price: currentProduct.price,
+            src: currentProduct.src
+          });
+        }
       });
       alert('Товары добавлены в корзину!');
     }
   };
 
+  const calculateOrderTotal = (items: Order['items']) => {
+    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  if (orders.length === 0) {
+    return (
+      <div className={`${textStylesHistory.body} w-full flex flex-col mt-8 md:mt-[62px] mb-6 md:mb-[50px] p-4 md:p-6`}>
+        <h1 className={`${textStylesHistory.h1} mb-6`}>История заказов</h1>
+        <p className={`${textStylesHistory.body} text-gray-600`}>У вас пока нет завершенных заказов</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full flex flex-col mt-8 md:mt-[62px] mb-6 md:mb-[50px] p-4 md:p-6">
-      <h1 className="text-3xl font-bold mb-6">История заказов</h1>
+    <div className={`${textStylesHistory.body} w-full flex flex-col mt-8 md:mt-[62px] mb-6 md:mb-[50px] p-4 md:p-6`}>
+      <h1 className={`${textStylesHistory.h1} mb-6`}>История заказов</h1>
 
       {orders.map((order) => (
         <div key={order.id} className="mb-8 md:mr-8 md:ml-8 md:mb-10 last:mb-0 mt-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-4 gap-2 md:gap-0">
-            <p className="text-gray-600">Заказ от: {order.date}</p>
-            <p className="font-bold">
-              <span>Итого: </span>{order.total}₽
+            <p className={`${textStylesHistory.orderDate}`}>Заказ от: {order.date}</p>
+            <p className={`${textStylesHistory.orderTotal} font-bold`}>
+              <span>Итого: </span>{calculateOrderTotal(order.items)}₽
             </p>
           </div>
 
@@ -46,11 +76,11 @@ export default function History({ orders }: { orders: Order[] }) {
                     className="w-full sm:w-[160px] md:w-[210px] h-auto sm:h-[140px] md:h-[185px] object-cover rounded-lg"
                     alt={item.name}
                   />
-                  <p className="font-medium">{item.name}</p>
+                  <p className={`${textStylesHistory.itemName}`}>{item.name}</p>
                 </div>
                 <div className="flex justify-between sm:justify-end items-center gap-4 md:gap-8">
-                  <p>{item.quantity} шт.</p>
-                  <p className="font-bold">{item.price}₽</p>
+                  <p className={`${textStylesHistory.itemQuantity}`}>{item.quantity} шт.</p>
+                  <p className={`${textStylesHistory.itemPrice}`}>{item.price}₽</p>
                 </div>
               </div>
             ))}
@@ -59,7 +89,7 @@ export default function History({ orders }: { orders: Order[] }) {
           <div className="flex justify-end mt-4">
             <button
               onClick={() => handleRepeatOrder(order.items)}
-              className="bg-[#7EDAFFDB] rounded-xl w-full md:w-[370px] h-14 md:h-[70px] text-white hover:bg-[#6ec9ff] transition-colors"
+              className={`${textStylesHistory.buttonPrimary} bg-white rounded-xl w-full md:w-[370px] h-14 md:h-[70px] hover:bg-gray-100 transition-colors`}
             >
               Повторить заказ
             </button>

@@ -1,45 +1,44 @@
-export const historyOrdersData = [
+import { Order } from '../types/index';
+
+export const historyOrdersData: Order[] = [
     {
         id: 1,
         date: "21.12.2022",
-        total: 2176,
         items: [
             {
-                id: 101,
-                image: "../../public/image/test.png",
-                name: "Панкейк Клубника",
+                id: 1,
+                name: "Панкейк клубника",
+                price: 600,
                 quantity: 2,
-                price: 890
+                image: "/images/pancake-strawberry.jpg"
             },
             {
-                id: 102,
-                image: "../../public/image/test.png",
-                name: "Кофе Латте",
+                id: 2,
+                name: "Панкейк крем-брюле",
+                price: 620,
                 quantity: 1,
-                price: 396
+                image: "/images/pancake-creme-brulee.jpg"
             }
         ]
     },
     {
         id: 2,
         date: "15.01.2023",
-        total: 1250,
         items: [
             {
-                id: 201,
-                image: "../../public/image/test.png",
-                name: "Чай матча",
+                id: 3,
+                name: "Панкейк клубника-матча",
+                price: 650,
                 quantity: 1,
-                price: 450
+                image: "/images/pancake-strawberry-matcha.jpg"
             },
             {
-                id: 201,
-                image: "../../public/image/test.png",
-                name: "Чай матча",
-                quantity: 1,
-                price: 450
+                id: 4,
+                name: "Панкейк нутелла банан",
+                price: 680,
+                quantity: 2,
+                image: "/images/pancake-nutella-banana.jpg"
             }
-
         ]
     }
 ];

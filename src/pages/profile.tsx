@@ -1,18 +1,16 @@
-import Header from "../module/header/header"
-import Guest from "../module/profile/guest"
-import History from "../module/profile/history"
+import Header from "../module/header/header";
+import Guest from "../module/profile/guest";
+import History from "../module/profile/history";
+import { historyOrdersData } from '../mockData/historyOrdersData';
 
-
-type Props = {}
-
-export default function Profile({ }: Props) {
+export default function Profile() {
   return (
     <div className="">
       <Header />
       <div className="max-w-[1440px] m-auto">
         <Guest />
-        <History orders={[]} />
+        <History orders={historyOrdersData} />
       </div>
     </div>
-  )
+  );
 }
