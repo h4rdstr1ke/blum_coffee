@@ -48,20 +48,21 @@ export default function CartPage() {
     return (
         <div className="">
             <Header />
-            <h1 className="text-3xl font-bold mb-6">Оформление заказа (самовывоз)</h1>
-
+            <h1 className="text-3xl text-[#39C6FF] forma-textRegular font-bold mb-6 mt-10 md:ml-20">Оформление заказа (самовывоз)</h1>
             <div className="max-w-[1440px] mx-auto">
                 <div className="">
                     <UserInfoSection userData={userData} />
-                    <DeliveryTimeSection
+                    <p className='text-center text-[#39C6FF] forma-textBold text-[34px]'>Самовывоз осуществляется по адресу: ул. 8 марта, 46 (ТРК Гринвич) 3 этаж.</p>
+                    <OrderCommentSection
                         deliveryOption={deliveryOption}
                         setDeliveryOption={setDeliveryOption}
                     />
+
                     <PaymentMethodSection
                         deliveryOption={deliveryOption}
                         setDeliveryOption={setDeliveryOption}
                     />
-                    <OrderCommentSection
+                    <DeliveryTimeSection
                         deliveryOption={deliveryOption}
                         setDeliveryOption={setDeliveryOption}
                     />

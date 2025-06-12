@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { cartStyles } from '../../style/textStyles';
 
 export default function CartItemsSection({
     items,
@@ -9,33 +10,33 @@ export default function CartItemsSection({
     handleSubmitOrder
 }: any) {
     return (
-        <div className="bg-white p-6 rounded-lg shadow border">
-            <h2 className="text-xl font-bold mb-4">Ваш заказ ({totalItems} шт.)</h2>
+        <div className={cartStyles.cartContainer}>
+            <h2 className={cartStyles.sectionTitle}>Ваш заказ ({totalItems} шт.)</h2>
             {items.length === 0 ? (
-                <p className="py-4 text-center">Корзина пуста</p>
+                <p className={cartStyles.emptyCartText}>Корзина пуста</p>
             ) : (
                 <>
                     {items.map((item: any) => (
-                        <div key={item.id} className="flex justify-between items-center border-b py-3">
-                            <div className="flex items-center gap-3">
+                        <div key={item.id} className={cartStyles.cartItem}>
+                            <div className={cartStyles.itemContainer}>
                                 <img
                                     src={item.src}
                                     alt={item.title}
-                                    className="w-12 h-12 object-cover rounded"
+                                    className={cartStyles.itemImage}
                                 />
                                 <div>
                                     <p className="font-medium">{item.title}</p>
-                                    <div className="flex items-center gap-2 mt-1">
+                                    <div className={cartStyles.quantityControls}>
                                         <button
                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                            className="w-6 h-6 flex items-center justify-center border rounded"
+                                            className={cartStyles.quantityButton}
                                         >
                                             -
                                         </button>
                                         <span>{item.quantity}</span>
                                         <button
                                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            className="w-6 h-6 flex items-center justify-center border rounded"
+                                            className={cartStyles.quantityButton}
                                         >
                                             +
                                         </button>
@@ -46,7 +47,7 @@ export default function CartItemsSection({
                                 <p className="font-bold">{item.price * item.quantity}₽</p>
                                 <button
                                     onClick={() => removeFromCart(item.id)}
-                                    className="text-red-500 text-sm"
+                                    className={cartStyles.removeButton}
                                 >
                                     Удалить
                                 </button>
@@ -54,7 +55,7 @@ export default function CartItemsSection({
                         </div>
                     ))}
 
-                    <div className="flex justify-between font-bold text-lg mt-4 pt-4 border-t">
+                    <div className={cartStyles.totalContainer}>
                         <span>Итого:</span>
                         <span>{totalPrice}₽</span>
                     </div>
@@ -62,9 +63,9 @@ export default function CartItemsSection({
                     <button
                         onClick={handleSubmitOrder}
                         disabled={items.length === 0}
-                        className={`w-full py-3 rounded-lg font-bold ${items.length === 0
-                            ? 'bg-gray-300 cursor-not-allowed'
-                            : 'bg-[#39C6FF] text-white hover:bg-[#2fb0e6]'
+                        className={`${cartStyles.submitButton} ${items.length === 0
+                            ? cartStyles.disabledButton
+                            : cartStyles.activeButton
                             }`}
                     >
                         Оформить заказ
@@ -73,7 +74,7 @@ export default function CartItemsSection({
                     {items.length > 0 && (
                         <Link
                             to="/shop"
-                            className="block text-center text-[#39C6FF] hover:underline mt-2"
+                            className={cartStyles.backLink}
                         >
                             ← Вернуться к покупкам
                         </Link>
