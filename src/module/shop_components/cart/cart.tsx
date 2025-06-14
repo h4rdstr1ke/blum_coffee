@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../../../context/CartContext';
+import { textStylesShop } from '../../../style/textStyles';
 
 export default function Cart() {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -15,7 +16,7 @@ export default function Cart() {
 
   return (
     <motion.div
-      className="fixed bottom-6 right-6 z-50"
+      className={textStylesShop.cartContainer}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -23,7 +24,7 @@ export default function Cart() {
       <Link
         to="/cart"
         onClick={handleClick}
-        className="flex items-center gap-3 bg-[#7EDAFF] text-white p-4 rounded-[30px] shadow-lg hover:bg-[#6ec9ff] transition-colors"
+        className={textStylesShop.cartLink}
       >
         <motion.div
           animate={{
@@ -32,16 +33,16 @@ export default function Cart() {
           }}
           transition={{ duration: 0.8 }}
         >
-          <div className="relative">
-            <img src="/image/cart.svg" alt="Корзина" className="w-10 h-10" />
+          <div className={textStylesShop.cartIconContainer}>
+            <img src="/image/cart.svg" alt="Корзина" className={textStylesShop.cartIcon} />
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className={textStylesShop.cartBadge}>
                 {totalItems}
               </span>
             )}
           </div>
         </motion.div>
-        <span className="text-3xl md:text-[40px] font-bold">Корзина</span>
+        <span className={textStylesShop.cartText}>Корзина</span>
       </Link>
     </motion.div>
   );

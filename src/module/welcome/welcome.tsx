@@ -25,6 +25,7 @@ export default function Welcome() {
       </div>
 
       {/* Десктопная версия */}
+
       <div className="welcome-desktop">
         {/* Панкейк */}
         <div className="pancake-container">

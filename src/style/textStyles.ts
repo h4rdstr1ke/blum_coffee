@@ -39,7 +39,7 @@ export const textStylesGuest = {
 export const textStylesShop = {
   // Заголовки секций
   sectionTitle: "forma-textRegular text-center text-[#7EDAFF] text-2xl md:text-[43px] font-bold",
-  sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-3xl md:text-[48px] font-bold",
+  sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-3xl md:text-[48px] font-bold mb-6 bg-[#7EDAFFDB] rounded-[50px] mx-auto max-w-[1200px] px-4 pb-4 pt-4",
 
   // Карточки продуктов
   productTitle: "text-white text-xl md:text-3xl font-bold",
@@ -49,14 +49,49 @@ export const textStylesShop = {
   infoButton: "text-gray font-bold text-sm",
   addButton: "text-white text-base md:text-xl font-bold",
 
-  // Модальное окно
-  modalTitle: "text-2xl font-bold text-gray-800",
-  modalLabel: "font-semibold text-gray-800",
-  modalText: "text-gray-600",
-  modalValue: "font-bold text-[#39C6FF]",
-  modalSmallText: "text-xs text-gray-500",
+  // Стили для компонента Cart (корзина справа снизу)
+  cartContainer: "fixed bottom-6 right-6 z-50",
+  cartLink: "flex items-center gap-3 bg-[#7EDAFF] text-white p-4 rounded-[30px] shadow-lg hover:bg-[#6ec9ff] transition-colors",
+  cartIconContainer: "relative",
+  cartIcon: "w-10 h-10",
+  cartBadge: "absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center",
+  cartText: "text-3xl md:text-[40px] font-bold",
 
+  // Стили для ProductCard
+  productCard: {
+    container: "flex bg-[#7EDAFFD9] rounded-[20px] md:rounded-[30px] p-4 md:p-4 h-[400px] md:h-[450px] flex-col w-full max-w-[300px] mx-auto relative",
+    imageContainer: "w-full h-[200px] md:h-[250px] rounded-[26px] overflow-hidden mb-3 md:mb-1 bg-white relative",
+    image: "w-full h-full object-cover",
+    infoButton: "absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center z-10 bg-white border border-gray-300 rounded-full shadow-sm",
+    infoIcon: "w-5 h-5",
+    title: "forma-textMedium text-[#FFFFFF] text-bold md:text-[28px]  mb-1 md:mb-2",
+    price: "forma-textMedium text-[#FFFFFF] md:text-[28px] absolute -top-5 md:-top-12 right-4 md:right-0 text-lg font-bold",
+    addButton: "forma-textMedium text-[#FFFFFF] bg-[#39C6FF] md:text-[24px] px-4 md:px-6 rounded-lg md:rounded-xl flex "
+  },
+
+  // Стили для ProductInfoModal
+  productInfoModal: {
+    overlay: "fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px]",
+    modalContainer: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white/90 backdrop-blur-sm rounded-xl shadow-xl w-full max-w-[90vw] md:max-w-[800px] max-h-[90vh] overflow-auto",
+    closeButton: "absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-50",
+    contentContainer: "flex flex-col h-full bg-[#7EDAFF] p-5",
+    topSection: "flex flex-1 overflow-hidden",
+    imageContainer: "w-1/2 h-auto max-h-[400px] rounded-[24px] overflow-hidden",
+    image: "w-full h-full object-cover",
+    descriptionContainer: "w-1/2 p-6 overflow-y-auto ",
+    compositionList: "forma-textMedium text-[#FFFFFF] text-[30px] list-disc pl-5 space-y-1 border",
+    nutritionSection: "text-[#FFFFFF] p-6",
+    nutritionGrid: "grid grid-cols-4 gap-2",
+    nutritionItem: "bg-[#7EDAFF] p-2 rounded text-center shadow-sm ",
+    modalLabel: "forma-textMedium text-[#A5A5A5] ",
+  },
+  // Модальное окно
+  modalTitle: "forma-textMedium text-[#A5A5A5] md:text-[35px] md:w-[80%] text-2xl font-bold border w-[80%]",
+  modalText: "text-gray-600 border",
+  modalValue: "font-bold",
+  modalSmallText: "text-xs",
 } as const;
+
 
 export const textStylesCart = {
   // Заголовки
@@ -374,18 +409,18 @@ export const cartStyles = {
     `,
 
   // CartItemsSection
-  cartContainer: "bg-white p-6 rounded-lg shadow",
-  cartItem: "p-4 bg-[#F8FAFC] rounded-lg relative",
+  cartContainer: "bg-white p-6 rounded-lg shadow border",
+  cartItem: "p-4 px-8 bg-[#7EDAFFDB] bg-opacity-[90%] rounded-[24px] relative border",
   itemContainer: "flex items-start gap-4",
-  itemImage: "w-20 h-20 object-cover rounded-lg",
-  itemTitle: "text-lg font-bold text-gray-900",
-  quantityControls: "flex items-center gap-2 bg-white rounded-full px-3 py-1",
-  quantityButton: "w-6 h-6 flex items-center justify-center text-[#39C6FF] font-bold hover:bg-gray-100 rounded-full",
-  quantityValue: "mx-2 font-medium",
-  itemPrice: "text-lg font-bold text-gray-900",
+  itemImage: "w-45 h-40 object-cover rounded-lg",
+  itemTitle: "forma-textBold text-[30px] font-bold text-[#FFFFFF]",
+  quantityControls: "flex items-center gap-2 bg-[#39C6FF] rounded-full px-3 py-1",
+  quantityButton: "w-6 h-6 flex items-center justify-center text-[#FFFFFF] font-bold hover:bg-gray-100 rounded-full",
+  quantityValue: "mx-2 font-medium text-[#FFFFFF]",
+  itemPrice: "text-lg font-bold text-[#FFFFFF]",
   removeButton: "absolute top-3 right-3 text-gray-400 hover:text-red-500",
-  totalContainer: "flex justify-between font-bold text-lg mt-6 pt-4 border-t border-gray-200",
-  submitButton: "w-full py-4 rounded-lg font-bold mt-6",
+  totalContainer: "flex text-[#39C6FF] justify-end font-bold text-lg mt-6 pt-4 border-t border-gray-200",
+  submitButton: "forma-textBold tracking-wider text-center w-full max-w-[300px] rounded-lg font-bold text-[24px]",
   activeButton: "bg-[#39C6FF] text-white hover:bg-[#2fb0e6]",
   disabledButton: "bg-gray-300 cursor-not-allowed",
   backLink: "block text-center text-[#39C6FF] hover:underline mt-4",

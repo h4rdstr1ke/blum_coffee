@@ -17,34 +17,45 @@ export default function CartItemsSection({
             ) : (
                 <>
                     {items.map((item: any) => (
-                        <div key={item.id} className={cartStyles.cartItem}>
-                            <div className={cartStyles.itemContainer}>
+                        <div key={item.id} className={`${cartStyles.cartItem} flex flex-col md:flex-row md:justify-between md:items-center gap-4`}>
+                            {/* Левая часть - изображение и название */}
+                            <div className="flex items-center gap-4 w-full md:flex-1">
                                 <img
                                     src={item.src}
                                     alt={item.title}
-                                    className={cartStyles.itemImage}
+                                    className={`${cartStyles.itemImage} flex-shrink-0`}
                                 />
-                                <div>
-                                    <p className="font-medium">{item.title}</p>
-                                    <div className={cartStyles.quantityControls}>
-                                        <button
-                                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                            className={cartStyles.quantityButton}
-                                        >
-                                            -
-                                        </button>
-                                        <span>{item.quantity}</span>
-                                        <button
-                                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            className={cartStyles.quantityButton}
-                                        >
-                                            +
-                                        </button>
-                                    </div>
+                                <div className="flex flex-col">
+                                    <p className={cartStyles.itemTitle}>{item.title}</p>
+                                    {/* Мобильная версия цены */}
+                                    <p className={`${cartStyles.itemPrice} md:hidden`}>
+                                        {item.price * item.quantity}₽
+                                    </p>
                                 </div>
                             </div>
-                            <div className="text-right">
-                                <p className="font-bold">{item.price * item.quantity}₽</p>
+
+                            {/* Центральная часть - управление количеством */}
+                            <div className="flex justify-between items-center md:flex-1 md:justify-center">
+                                <div className={cartStyles.quantityControls}>
+                                    <button
+                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                        className={cartStyles.quantityButton}
+                                    >
+                                        -
+                                    </button>
+                                    <span className={cartStyles.quantityValue}>{item.quantity}</span>
+                                    <button
+                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                        className={cartStyles.quantityButton}
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Правая часть - цена и кнопка удаления (скрыта на мобильных) */}
+                            <div className="hidden md:flex md:flex-1 md:justify-end md:items-center md:gap-4">
+                                <p className={cartStyles.itemPrice}>{item.price * item.quantity}₽</p>
                                 <button
                                     onClick={() => removeFromCart(item.id)}
                                     className={cartStyles.removeButton}
@@ -52,25 +63,32 @@ export default function CartItemsSection({
                                     Удалить
                                 </button>
                             </div>
+
+                            {/* Кнопка удаления для мобильной версии */}
+                            <button
+                                onClick={() => removeFromCart(item.id)}
+                                className="md:hidden text-red-500 text-sm self-end"
+                            >
+                                Удалить
+                            </button>
                         </div>
                     ))}
 
                     <div className={cartStyles.totalContainer}>
-                        <span>Итого:</span>
-                        <span>{totalPrice}₽</span>
+                        <span>Итого:</span>&nbsp;<span>{totalPrice}₽</span>
                     </div>
-
-                    <button
-                        onClick={handleSubmitOrder}
-                        disabled={items.length === 0}
-                        className={`${cartStyles.submitButton} ${items.length === 0
-                            ? cartStyles.disabledButton
-                            : cartStyles.activeButton
-                            }`}
-                    >
-                        Оформить заказ
-                    </button>
-
+                    <div className='border flex justify-end'>
+                        <button
+                            onClick={handleSubmitOrder}
+                            disabled={items.length === 0}
+                            className={`${cartStyles.submitButton} ${items.length === 0
+                                ? cartStyles.disabledButton
+                                : cartStyles.activeButton
+                                }`}
+                        >
+                            Оформить заказ
+                        </button>
+                    </div>
                     {items.length > 0 && (
                         <Link
                             to="/shop"

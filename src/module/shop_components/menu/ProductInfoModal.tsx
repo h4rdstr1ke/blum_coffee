@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { textStylesShop } from "../../../style/textStyles";
 
 type ProductInfo = {
@@ -20,83 +22,95 @@ type Props = {
     };
 };
 
+
 export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
-    if (!isOpen) return null;
+    return createPortal(
+        <AnimatePresence>
+            {isOpen && (
+                <>
+                    {/* Полупрозрачный фон с размытием */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={textStylesShop.productInfoModal.overlay}
+                        onClick={onClose}
+                    />
 
-    return (
-        <>
-            {/* Затемнение фона */}
-            <div
-                className="fixed inset-0 z-40 bg-[rgba(0,0,0,0.5)]"
-                onClick={onClose}
-            />
+                    {/* Контент модалки */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className={textStylesShop.productInfoModal.modalContainer}
+                    >
+                        {/* Кнопка закрытия */}
+                        <button
+                            onClick={onClose}
+                            className={textStylesShop.productInfoModal.closeButton}
+                            aria-label="Закрыть"
+                        >
+                            ×
+                        </button>
 
-            {/* Модальное окно */}
-            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl shadow-xl w-full max-w-[800px] max-h-[90vh] overflow-hidden">
-                {/* Кнопка закрытия */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-50"
-                    aria-label="Закрыть"
-                >
-                    ×
-                </button>
+                        <div className={textStylesShop.productInfoModal.contentContainer}>
+                            {/* Верхняя часть: изображение + описание */}
+                            <div className={textStylesShop.productInfoModal.topSection}>
+                                {/* Изображение */}
+                                <div className={textStylesShop.productInfoModal.imageContainer}>
+                                    <img
+                                        src={product.src}
+                                        alt={product.title}
+                                        className={textStylesShop.productInfoModal.image}
+                                    />
+                                </div>
 
-                <div className="flex flex-col h-full">
-                    {/* Верхняя часть: изображение + описание */}
-                    <div className="flex flex-1 overflow-hidden">
-                        {/* Изображение */}
-                        <div className="w-1/2 h-auto max-h-[400px] overflow-hidden">
-                            <img
-                                src={product.src}
-                                alt={product.title}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
+                                {/* Описание */}
+                                <div className={textStylesShop.productInfoModal.descriptionContainer}>
+                                    <h3 className={textStylesShop.modalTitle}>{product.title}</h3>
 
-                        {/* Описание */}
-                        <div className="w-1/2 p-6 overflow-y-auto">
-                            <h3 className={`${textStylesShop.modalTitle} mb-4`}>{product.title}</h3>
+                                    <p className={textStylesShop.modalText}>
+                                        <span className={textStylesShop.productInfoModal.modalLabel}>Вес:</span> {product.info.weight}
+                                    </p>
 
-                            <p className={`${textStylesShop.modalText} mb-4`}>
-                                <span className={`${textStylesShop.modalLabel}`}>Вес:</span> {product.info.weight}
-                            </p>
+                                    <div>
+                                        <h4 className={textStylesShop.productInfoModal.modalLabel}>Состав:</h4>
+                                        <ul className={textStylesShop.productInfoModal.compositionList}>
+                                            {product.info.composition.map((ingredient, index) => (
+                                                <li key={index} className=" ">{ingredient}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <div>
-                                <h4 className={`${textStylesShop.modalLabel} mb-2`}>Состав:</h4>
-                                <ul className="list-disc pl-5 space-y-1">
-                                    {product.info.composition.map((ingredient, index) => (
-                                        <li key={index} className="text-gray-600">{ingredient}</li>
-                                    ))}
-                                </ul>
+                            {/* Нижняя часть: пищевая ценность */}
+                            <div className={textStylesShop.productInfoModal.nutritionSection}>
+                                <h4 className={textStylesShop.productInfoModal.modalLabel}>Пищевая ценность на 100 г:</h4>
+                                <div className={textStylesShop.productInfoModal.nutritionGrid}>
+                                    <div className={textStylesShop.productInfoModal.nutritionItem}>
+                                        <p className={textStylesShop.modalValue}>{product.info.calories}</p>
+                                        <p className={textStylesShop.modalSmallText}>ккал</p>
+                                    </div>
+                                    <div className={textStylesShop.productInfoModal.nutritionItem}>
+                                        <p className={textStylesShop.modalValue}>{product.info.proteins}</p>
+                                        <p className={textStylesShop.modalSmallText}>белки</p>
+                                    </div>
+                                    <div className={textStylesShop.productInfoModal.nutritionItem}>
+                                        <p className={textStylesShop.modalValue}>{product.info.fats}</p>
+                                        <p className={textStylesShop.modalSmallText}>жиры</p>
+                                    </div>
+                                    <div className={textStylesShop.productInfoModal.nutritionItem}>
+                                        <p className={textStylesShop.modalValue}>{product.info.carbs}</p>
+                                        <p className={textStylesShop.modalSmallText}>углеводы</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Нижняя часть: пищевая ценность */}
-                    <div className="p-6 border-t bg-gray-50">
-                        <h4 className="font-semibold text-gray-800 mb-3">Пищевая ценность на 100 г:</h4>
-                        <div className="grid grid-cols-4 gap-2">
-                            <div className="bg-white p-2 rounded text-center shadow-sm">
-                                <p className={`${textStylesShop.modalValue}`}>{product.info.calories}</p>
-                                <p className={`${textStylesShop.modalSmallText} mt-1`}>ккал</p>
-                            </div>
-                            <div className="bg-white p-2 rounded text-center shadow-sm">
-                                <p className={`${textStylesShop.modalValue}`}>{product.info.proteins}</p>
-                                <p className={`${textStylesShop.modalSmallText} mt-1`}>белки</p>
-                            </div>
-                            <div className="bg-white p-2 rounded text-center shadow-sm">
-                                <p className={`${textStylesShop.modalValue}`}>{product.info.fats}</p>
-                                <p className={`${textStylesShop.modalSmallText} mt-1`}>жиры</p>
-                            </div>
-                            <div className="bg-white p-2 rounded text-center shadow-sm">
-                                <p className={`${textStylesShop.modalValue}`}>{product.info.carbs}</p>
-                                <p className={`${textStylesShop.modalSmallText} mt-1`}>углеводы</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+                    </motion.div>
+                </>
+            )}
+        </AnimatePresence>,
+        document.getElementById('modal-root')! // Рендерим в отдельный контейнер
     );
 };
