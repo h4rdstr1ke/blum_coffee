@@ -32,7 +32,7 @@ export default function Location({ }: Props) {
   };
 
   return (
-    <div className="w-full mx-auto py-10 md:py-20 relative overflow-hidden min-h-[300px] md:min-h-[600px]">
+    <div className="w-full mx-auto py-10 md:py-20 mt-[10%] relative overflow-hidden min-h-[300px] md:min-h-[600px]">
       {/* ПК-элементы */}
       {!isMobile && (
         <>

@@ -21,8 +21,8 @@ const categoryDescriptions: Record<CategoryKeys, string> = {
 
 export default function MenuSection() {
     return (
-        <div className="space-y-20 w-full">
-            <h2 className="forma-textBold w-full text-center text-[64px] text-[#FD744C] border">МЕНЮ</h2>
+        <div className="space-y-20 w-full mt-[20%] md:mt-[10%]">
+            <h2 className="forma-textBold tracking-widest w-full text-center text-[51px] md:text-[64px] text-[#FD744C]">МЕНЮ</h2>
             {menuData.map(category => {
                 const categoryKey = category.id as CategoryKeys;
                 return (

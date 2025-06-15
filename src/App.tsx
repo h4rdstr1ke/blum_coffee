@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/shop';
 import Profile from './pages/profile';
-import CartPage from './pages/CartPage'; // импорт
+import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext'; // провайдер
 import { UserProvider } from './context/UserContext';
 import './style/index.css';
@@ -17,7 +17,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/cart" element={<CartPage />} /> {/* Добавляем маршрут */}
+            <Route path="/cart" element={<CartPage />} />
           </Routes>
         </UserProvider>
       </CartProvider>

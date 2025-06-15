@@ -39,11 +39,7 @@ export const textStylesGuest = {
 export const textStylesShop = {
   // Заголовки секций
   sectionTitle: "forma-textRegular text-center text-[#7EDAFF] text-2xl md:text-[43px] font-bold",
-  sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-3xl md:text-[48px] font-bold mb-6 bg-[#7EDAFFDB] rounded-[50px] mx-auto max-w-[1200px] px-4 pb-4 pt-4",
-
-  // Карточки продуктов
-  productTitle: "text-white text-xl md:text-3xl font-bold",
-  productPrice: "text-white text-lg md:text-2xl font-bold",
+  sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-3xl md:text-[35px] font-bold mb-6 bg-[#7EDAFFDB] rounded-[50px] mx-auto max-w-[1200px] px-4 pb-4 pt-4",
 
   // Кнопки
   infoButton: "text-gray font-bold text-sm",
@@ -72,24 +68,24 @@ export const textStylesShop = {
   // Стили для ProductInfoModal
   productInfoModal: {
     overlay: "fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px]",
-    modalContainer: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white/90 backdrop-blur-sm rounded-xl shadow-xl w-full max-w-[90vw] md:max-w-[800px] max-h-[90vh] overflow-auto",
+    modalContainer: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white/90 backdrop-blur-sm rounded-[24px] shadow-xl w-full max-w-[90vw] md:max-w-[800px] max-h-[90vh] overflow-auto",
     closeButton: "absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl z-50",
     contentContainer: "flex flex-col h-full bg-[#7EDAFF] p-5",
     topSection: "flex flex-1 overflow-hidden",
-    imageContainer: "w-1/2 h-auto max-h-[400px] rounded-[24px] overflow-hidden",
+    imageContainer: "w-1/2 h-auto max-h-[350px] rounded-[24px] overflow-hidden",
     image: "w-full h-full object-cover",
     descriptionContainer: "w-1/2 p-6 overflow-y-auto ",
-    compositionList: "forma-textMedium text-[#FFFFFF] text-[30px] list-disc pl-5 space-y-1 border",
+    compositionList: "forma-textMedium text-[#FFFFFF] md:text-[24px] list-disc pl-5 space-y-1",
     nutritionSection: "text-[#FFFFFF] p-6",
     nutritionGrid: "grid grid-cols-4 gap-2",
     nutritionItem: "bg-[#7EDAFF] p-2 rounded text-center shadow-sm ",
-    modalLabel: "forma-textMedium text-[#A5A5A5] ",
+    modalLabel: "forma-textMedium text-[#A5A5A5] md:text-[30px]",
   },
   // Модальное окно
-  modalTitle: "forma-textMedium text-[#A5A5A5] md:text-[35px] md:w-[80%] text-2xl font-bold border w-[80%]",
-  modalText: "text-gray-600 border",
-  modalValue: "font-bold",
-  modalSmallText: "text-xs",
+  modalTitle: "forma-textMedium tracking-wider text-[#A5A5A5] text-2xl md:text-[40px] w-[80%] md:w-[80%] mb-5 font-bold",
+  modalText: "forma-textMedium text-[#FFFFFF] md:text-[24px]",
+  modalValue: "forma-textRegular md:text-[24px] font-bold",
+  modalSmallText: "forma-textRegular md:text-[15px] text-xs",
 } as const;
 
 
