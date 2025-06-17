@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import ShopPage from './pages/shop';
 import Profile from './pages/profile';
 import CartPage from './pages/CartPage';
+import RegPage from './pages/reg';
 import { CartProvider } from './context/CartContext'; // провайдер
 import { UserProvider } from './context/UserContext';
 import './style/index.css';
@@ -15,6 +16,7 @@ function App() {
       <CartProvider>
         <UserProvider>
           <Routes>
+            <Route path="/reg" element={<RegPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/profile" element={<Profile />} />
