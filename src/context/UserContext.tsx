@@ -1,37 +1,60 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ProfileData } from '../types';
 
-type UserContextType = {
-    userData: ProfileData;
+interface ProfileData {
+    name: string;
+    surname: string;
+    phone_number: string;
+    first_name: string;
+    last_name: string;
+    email?: string;
+    is_employee?: boolean;
+}
+
+interface UserContextType {
+    userData: ProfileData | null;
+    isLoading: boolean;
+    error: string | null;
     loadUserData: () => Promise<void>;
-    saveUserData: (data: ProfileData) => Promise<boolean>;
-};
+    isEmployee: boolean;
+}
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-    const [userData, setUserData] = useState<ProfileData>({
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone_number: ''
-    });
+    const [userData, setUserData] = useState<ProfileData | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isEmployee, setIsEmployee] = useState(false);
 
     const loadUserData = async () => {
-        // Заменить на API-вызов
-        const mockData: ProfileData = {
-            first_name: 'Иван',
-            last_name: 'Иванов',
-            email: 'ivan@example.com',
-            phone_number: '+790012345677'
-        };
-        setUserData(mockData);
-    };
+        setIsLoading(true);
+        setError(null);
+        try {
+            const token = localStorage.getItem('user_token');
+            if (!token) throw new Error('Пользователь не авторизован');
 
-    const saveUserData = async (data: ProfileData) => {
-        // Заменить на API-вызов
-        setUserData(data);
-        return true;
+            const response = await fetch(`${API_BASE_URL}/user`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error('Ошибка загрузки данных');
+
+            const data = await response.json();
+            setUserData({
+                ...data,
+                first_name: data.name,
+                last_name: data.surname
+            });
+            setIsEmployee(!!data.is_employee);
+        } catch (err) {
+            localStorage.removeItem('user_token');
+            setError(err instanceof Error ? err.message : 'Ошибка загрузки');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -39,7 +62,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <UserContext.Provider value={{ userData, loadUserData, saveUserData }}>
+        <UserContext.Provider value={{ userData, isLoading, error, loadUserData, isEmployee }}>
             {children}
         </UserContext.Provider>
     );
@@ -47,8 +70,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
 export function useUser() {
     const context = useContext(UserContext);
-    if (!context) {
-        throw new Error('useUser must be used within a UserProvider');
-    }
+    if (!context) throw new Error('useUser must be used within UserProvider');
     return context;
 }

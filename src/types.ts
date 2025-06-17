@@ -36,7 +36,7 @@ export type HistoryOrder = {
     items: OrderItem[];
 };
 
-export type ProfileData = {
+export interface ProfileData {
     first_name: string;
     last_name: string;
     email: string;

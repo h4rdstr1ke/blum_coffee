@@ -7,7 +7,8 @@ export default function CartItemsSection({
     totalPrice,
     updateQuantity,
     removeFromCart,
-    handleSubmitOrder
+    handleSubmitOrder,
+    isSubmitting
 }: any) {
     return (
         <div className={cartStyles.cartContainer}>
@@ -80,13 +81,13 @@ export default function CartItemsSection({
                     <div className='border flex justify-end'>
                         <button
                             onClick={handleSubmitOrder}
-                            disabled={items.length === 0}
-                            className={`${cartStyles.submitButton} ${items.length === 0
-                                ? cartStyles.disabledButton
-                                : cartStyles.activeButton
+                            disabled={items.length === 0 || isSubmitting}
+                            className={`${cartStyles.submitButton} ${items.length === 0 || isSubmitting
+                                    ? cartStyles.disabledButton
+                                    : cartStyles.activeButton
                                 }`}
                         >
-                            Оформить заказ
+                            {isSubmitting ? 'Оформление...' : 'Оформить заказ'}
                         </button>
                     </div>
                     {items.length > 0 && (
