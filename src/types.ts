@@ -1,4 +1,5 @@
 // Общие типы для всего приложения
+
 export type Product = {
     id: number;
     title: string;

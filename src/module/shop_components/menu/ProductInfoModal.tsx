@@ -22,13 +22,11 @@ type Props = {
     };
 };
 
-
 export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
     return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Полупрозрачный фон с размытием */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -37,14 +35,12 @@ export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
                         onClick={onClose}
                     />
 
-                    {/* Контент модалки */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         className={textStylesShop.productInfoModal.modalContainer}
                     >
-                        {/* Кнопка закрытия */}
                         <button
                             onClick={onClose}
                             className={textStylesShop.productInfoModal.closeButton}
@@ -54,9 +50,7 @@ export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
                         </button>
 
                         <div className={textStylesShop.productInfoModal.contentContainer}>
-                            {/* Верхняя часть: изображение + описание */}
                             <div className={textStylesShop.productInfoModal.topSection}>
-                                {/* Изображение */}
                                 <div className={textStylesShop.productInfoModal.imageContainer}>
                                     <img
                                         src={product.src}
@@ -65,7 +59,6 @@ export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
                                     />
                                 </div>
 
-                                {/* Описание */}
                                 <div className={textStylesShop.productInfoModal.descriptionContainer}>
                                     <h3 className={textStylesShop.modalTitle}>{product.title}</h3>
 
@@ -77,14 +70,13 @@ export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
                                         <h4 className={textStylesShop.productInfoModal.modalLabel}>Состав:</h4>
                                         <ul className={textStylesShop.productInfoModal.compositionList}>
                                             {product.info.composition.map((ingredient, index) => (
-                                                <li key={index} className=" ">{ingredient}</li>
+                                                <li key={index}>{ingredient}</li>
                                             ))}
                                         </ul>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Нижняя часть: пищевая ценность */}
                             <div className={textStylesShop.productInfoModal.nutritionSection}>
                                 <h4 className={textStylesShop.productInfoModal.modalLabel}>Пищевая ценность на 100 г:</h4>
                                 <div className={textStylesShop.productInfoModal.nutritionGrid}>
@@ -111,6 +103,6 @@ export const ProductInfoModal: FC<Props> = ({ isOpen, onClose, product }) => {
                 </>
             )}
         </AnimatePresence>,
-        document.getElementById('modal-root')! // Рендерим в отдельный контейнер
+        document.getElementById('modal-root')!
     );
 };

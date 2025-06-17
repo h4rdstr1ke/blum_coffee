@@ -7,6 +7,7 @@ import { CartProvider } from './context/CartContext'; // провайдер
 import { UserProvider } from './context/UserContext';
 import './style/index.css';
 import '../public/fonts/FormaDJRCyrillic_Web/fonts.css';
+import AdminPanel from './module/shop_components/menu/AdminPanel';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </UserProvider>
       </CartProvider>

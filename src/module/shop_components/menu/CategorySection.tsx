@@ -10,13 +10,20 @@ type Props = {
         title: string;
         price: number;
         src: string;
+        info?: {
+            weight: string;
+            composition: string[];
+            calories: string;
+            proteins: string;
+            fats: string;
+            carbs: string;
+        };
     }>;
 };
 
 export default function CategorySection({ title, description, items }: Props) {
     return (
         <section className="fon4 py-10 w-full max-w-[1440px] mx-auto px-4">
-            {/* Заголовок и описание */}
             {description && (
                 <motion.div
                     initial={{ opacity: 1, y: 20 }}
@@ -39,7 +46,6 @@ export default function CategorySection({ title, description, items }: Props) {
                 {title}
             </motion.h2>
 
-            {/* Контейнер для карточек с центрированием */}
             <div className="flex justify-center">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 w-full max-w-[1200px]">
                     {items.map((item, index) => (
