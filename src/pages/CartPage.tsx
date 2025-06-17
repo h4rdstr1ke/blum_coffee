@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Header from "../module/header/header";
 import UserInfoSection from "../module/cartpage/UserInfoSection";
 import DeliveryTimeSection from "../module/cartpage/DeliveryTimeSection";
@@ -10,9 +10,15 @@ import OrderCommentSection from "../module/cartpage/OrderCommentSection";
 import CartItemsSection from "../module/cartpage/CartItemsSection";
 import Footer from "../module/footer/footer";
 
+
 const API_BASE_URL = "http://193.23.219.155:4747/api/v1";
 
 export default function CartPage() {
+    const { isEmployee } = useUser();
+
+    if (isEmployee) {
+        return <Navigate to="/employee/orders" replace />;
+    }
     const {
         items,
         removeFromCart,
@@ -49,15 +55,34 @@ export default function CartPage() {
         setOrderError(null);
 
         try {
+            // Форматируем дату правильно
+            let completionDateTime;
+            if (deliveryOption.time === 'asap') {
+                completionDateTime = new Date().toISOString();
+            } else {
+                // Получаем выбранную дату и время
+                const [hours, minutes] = deliveryOption.customTime.split(':');
+                const completionDate = new Date();
+                completionDate.setHours(parseInt(hours));
+                completionDate.setMinutes(parseInt(minutes));
+
+                // Форматируем в нужный формат "Y-m-d H:i"
+                const year = completionDate.getFullYear();
+                const month = String(completionDate.getMonth() + 1).padStart(2, '0');
+                const day = String(completionDate.getDate()).padStart(2, '0');
+                const hoursFormatted = String(completionDate.getHours()).padStart(2, '0');
+                const minutesFormatted = String(completionDate.getMinutes()).padStart(2, '0');
+
+                completionDateTime = `${year}-${month}-${day} ${hoursFormatted}:${minutesFormatted}`;
+            }
+
             const orderData = {
-                completion_datetime: deliveryOption.time === 'asap'
-                    ? new Date().toISOString()
-                    : new Date(deliveryOption.customTime).toISOString(),
+                completion_datetime: completionDateTime,
                 products: items.map(item => ({
                     id: item.id,
                     quantity: item.quantity
                 })),
-                comment: deliveryOption.comment
+                comment: deliveryOption.comment || ""
             };
 
             const response = await fetch(`${API_BASE_URL}/order`, {

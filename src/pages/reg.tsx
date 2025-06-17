@@ -1,53 +1,213 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
-type Props = {}
+export default function RegPage() {
+    const {
+        loginUser,
+        registerUser,
+        loginEmployee,
+        sendCode,
+        isLoading,
+        error
+    } = useUser();
+    const navigate = useNavigate();
 
-export default function RegPage({ }: Props) {
-    const [showCodeInput, setShowCodeInput] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [mode, setMode] = useState<'login' | 'register' | 'employee'>('login');
+    const [phone, setPhone] = useState('');
     const [code, setCode] = useState('');
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [login, setLogin] = useState('admin');
+    const [password, setPassword] = useState('admin');
+    const [codeSent, setCodeSent] = useState(false);
+
+    const handleSendCode = async () => {
+        try {
+            await sendCode(phone);
+            setCodeSent(true);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleLogin = async () => {
+        try {
+            await loginUser(phone, code);
+            navigate('/profile');
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleRegister = async () => {
+        try {
+            await registerUser(phone, code, name, surname);
+            navigate('/profile');
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleEmployeeLogin = async () => {
+        try {
+            await loginEmployee(login, password);
+            navigate('/admin');
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
-        <div className="max-w-[] m-auto ">
-            <div className="flex flex-col items-center justify-center ">
-                <h1 className='text-[75px] text-[#39C6FF] mb-[30px]'>Вход в личный кабинет</h1>
-                <div className={`border border-black rounded-[30px] ${showCodeInput ? 'w-[1000px]' : 'w-[700px]'} h-[400px] p-[30px] flex flex-col items-center justify-center `}>
-                    <div className="flex flex-col items-center">
-                        {!showCodeInput && (
-                            <p className="text-[32px] text-[#C9CCCD] ">Введите номер телефона</p>
-                        )}
-                        <input
-                            className="bg-[#A5A5A5] rounded-[20px] p-[20px] mt-[16px] text-[30px] text-[#FFFFFF] font-bold"
-                            type="text"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
-                        <button className="text-[32px] text-[#C9CCCD] hover:cursor-pointer">Изменить</button>
-                    </div>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <h1 className="text-2xl font-bold text-center mb-6">
+                    {mode === 'employee' ? 'Вход для сотрудников' :
+                        mode === 'register' ? 'Регистрация' : 'Вход в систему'}
+                </h1>
 
-                    {showCodeInput && (
-                        <div className="mt-[18px] flex flex-col items-center">
-                            <p className="text-[32px] text-[#39C6FF] mb-[15px] font-semibold">Отправили код на номер, введите его ниже </p>
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                    </div>
+                )}
+
+                {mode === 'employee' ? (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Логин</label>
                             <input
-                                className="bg-[#A5A5A5] rounded-[20px] p-[20px] text-[30px] text-[#FFFFFF] font-bold"
                                 type="text"
-                                placeholder="Введите код"
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
+                                className="w-full p-2 border rounded"
+                                value={login}
+                                onChange={(e) => setLogin(e.target.value)}
                             />
                         </div>
-                    )}
-
-                    {!showCodeInput && (
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+                            <input
+                                type="password"
+                                className="w-full p-2 border rounded"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
                         <button
-                            onClick={() => setShowCodeInput(true)}
-                            className="text-[38px] mt-[30px] bg-[#39C6FF] text-[#FFFFFF] rounded-[20px] px-[40px] pb-[7px] hover:cursor-pointer"
+                            onClick={handleEmployeeLogin}
+                            disabled={isLoading}
+                            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
                         >
-                            Продолжить
+                            {isLoading ? 'Вход...' : 'Войти как сотрудник'}
                         </button>
-                    )}
+                    </div>
+                ) : codeSent ? (
+                    <div className="space-y-4">
+                        <p className="text-sm text-gray-600">
+                            Код отправлен на номер {phone}
+                        </p>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Код подтверждения</label>
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                placeholder="Введите код из SMS"
+                            />
+                        </div>
+
+                        {mode === 'register' && (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                                    <input
+                                        type="text"
+                                        className="w-full p-2 border rounded"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder="Введите ваше имя"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Фамилия</label>
+                                    <input
+                                        type="text"
+                                        className="w-full p-2 border rounded"
+                                        value={surname}
+                                        onChange={(e) => setSurname(e.target.value)}
+                                        placeholder="Введите вашу фамилию"
+                                    />
+                                </div>
+                            </>
+                        )}
+
+                        <button
+                            onClick={mode === 'register' ? handleRegister : handleLogin}
+                            disabled={isLoading}
+                            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                        >
+                            {isLoading ? 'Проверка...' : mode === 'register' ? 'Зарегистрироваться' : 'Войти'}
+                        </button>
+
+                        <button
+                            onClick={() => setCodeSent(false)}
+                            className="w-full text-blue-600 hover:text-blue-800 text-sm"
+                        >
+                            Изменить номер телефона
+                        </button>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Номер телефона</label>
+                            <input
+                                type="tel"
+                                className="w-full p-2 border rounded"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                placeholder="+7 (999) 999-99-99"
+                            />
+                        </div>
+                        <button
+                            onClick={handleSendCode}
+                            disabled={isLoading}
+                            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                        >
+                            {isLoading ? 'Отправка...' : 'Получить код'}
+                        </button>
+                    </div>
+                )}
+
+                <div className="flex justify-center space-x-4 mt-6">
+                    <button
+                        onClick={() => {
+                            setMode('login');
+                            setCodeSent(false);
+                        }}
+                        className={`text-sm ${mode === 'login' ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                    >
+                        Вход
+                    </button>
+                    <button
+                        onClick={() => {
+                            setMode('register');
+                            setCodeSent(false);
+                        }}
+                        className={`text-sm ${mode === 'register' ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                    >
+                        Регистрация
+                    </button>
+                    <button
+                        onClick={() => {
+                            setMode('employee');
+                            setCodeSent(false);
+                        }}
+                        className={`text-sm ${mode === 'employee' ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                    >
+                        Сотрудник
+                    </button>
                 </div>
             </div>
         </div>
-    )
+    );
 }

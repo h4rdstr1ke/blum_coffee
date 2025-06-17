@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 import Header from "../module/header/header";
 import Footer from "../module/footer/footer";
 import { cartStyles } from '../style/textStyles';
+
+
+const API_BASE_URL = "http://193.23.219.155:4747/api/v1";
 
 interface OrderItem {
     product_id: number;
@@ -23,27 +27,37 @@ interface Order {
     items: OrderItem[];
 }
 
-const EMPLOYEE_TOKEN = "9|Ro2IuxHgf38lrKz1qvPwjbOok1AdmLDH65E5OFtaa9a15bce";
-const API_BASE_URL = "http://193.23.219.155:4747/api/v1";
-
 export default function EmployeeOrdersPage() {
+    const { isEmployee, logout } = useUser();
+    const navigate = useNavigate();
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!isEmployee) {
+            navigate('/login');
+        } else {
+            fetchOrders();
+        }
+    }, [isEmployee, navigate]);
 
     const fetchOrders = async () => {
         setIsLoading(true);
         setError(null);
         try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) throw new Error('Токен не найден');
+
             const response = await fetch(`${API_BASE_URL}/order`, {
                 headers: {
-                    'Authorization': `Bearer ${EMPLOYEE_TOKEN}`,
+                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json'
                 }
             });
 
             if (!response.ok) throw new Error('Ошибка загрузки заказов');
+
             const data = await response.json();
             setOrders(data.data || []);
         } catch (err) {
@@ -55,23 +69,31 @@ export default function EmployeeOrdersPage() {
 
     const updateOrderStatus = async (orderId: number, action: 'complete' | 'cancel') => {
         try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) throw new Error('Токен не найден');
+
             const endpoint = action === 'complete' ? 'order-complete' : 'order-cancel';
             const response = await fetch(`${API_BASE_URL}/${endpoint}/${orderId}`, {
                 method: 'PATCH',
                 headers: {
-                    'Authorization': `Bearer ${EMPLOYEE_TOKEN}`,
+                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json'
                 }
             });
 
-            if (!response.ok) throw new Error(`Не удалось ${action === 'complete' ? 'завершить' : 'отменить'} заказ`);
+            if (!response.ok) {
+                throw new Error(`Не удалось ${action === 'complete' ? 'завершить' : 'отменить'} заказ`);
+            }
+
             await fetchOrders();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Ошибка обновления');
         }
     };
 
-    useEffect(() => { fetchOrders(); }, []);
+    if (!isEmployee) {
+        return null;
+    }
 
     return (
         <div className="">
