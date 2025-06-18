@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { textStylesHeader } from '../../style/textStyles';
+import { useUser } from '../../context/UserContext';
 
 type Props = {}
 
 export default function Header({ }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isEmployee } = useUser();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -56,9 +58,12 @@ export default function Header({ }: Props) {
             <div className={textStylesHeader.scheduleTime}>ПН-ВС 10:00-22:00</div>
           </div>
 
-          <Link to="/cart" className={textStylesHeader.navLink}>ДОСТАВКА</Link>
+          {isEmployee ? (
+            <Link to="/employee/orders" className={textStylesHeader.navLink}>ЗАКАЗЫ</Link>
+          ) : (
+            <Link to="/cart" className={textStylesHeader.navLink}>ДОСТАВКА</Link>
+          )}
           <Link to="/shop" className={textStylesHeader.navLink}>МЕНЮ</Link>
-          <Link to="/employee/orders" className={textStylesHeader.navLink}>Заказы</Link>
           <a className={textStylesHeader.navLink} href="#contacts">КОНТАКТЫ</a>
 
           <Link to="/profile">

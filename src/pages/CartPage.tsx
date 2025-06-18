@@ -54,7 +54,7 @@ export default function CartPage() {
         setOrderError(null);
 
         try {
-            // Форматируем дату правильно
+            // Форматируем дату 
             let completionDateTime;
             const now = new Date();
 
@@ -72,7 +72,7 @@ export default function CartPage() {
                     parseInt(minutes)
                 );
 
-                // Форматируем в нужный формат "Y-m-d H:i"
+                // Форматируем в нужный форм Y-m-d H:i
                 const year = completionDate.getFullYear();
                 const month = String(completionDate.getMonth() + 1).padStart(2, '0');
                 const day = String(completionDate.getDate()).padStart(2, '0');

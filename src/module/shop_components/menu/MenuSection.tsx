@@ -123,7 +123,7 @@ export default function MenuSection() {
                             info: {
                                 weight: `${p.weight} г`,
                                 composition: p.ingredients.map(ing =>
-                                    `${ing.name || 'Ингредиент'} - ${ing.quantity} ${ing.unit}`
+                                    `${ing.name || 'Ингредиент'} - ${ing.unit}`
                                 ),
                                 calories: p.energy_value.toString(),
                                 proteins: p.proteins.toString(),

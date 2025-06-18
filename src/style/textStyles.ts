@@ -476,3 +476,63 @@ export const textStylesReg = {
   // Стили для сообщения о коде
   codeSentMessage: "text-sm text-gray-600 mb-2",
 } as const;
+
+
+export const textStylesEmployeeOrders = {
+  // Общие стили
+  pageContainer: "max-w-6xl mx-auto p-4 md:p-6",
+  pageTitle: "text-3xl md:text-4xl font-bold mb-8 text-[#39C6FF] forma-textBold tracking-wider text-center",
+  errorContainer: "bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6 forma-textRegular",
+  loadingText: "text-center py-12 text-[#39C6FF] text-xl forma-textRegular",
+  emptyText: "text-center text-[#39C6FF] text-xl py-12 forma-textRegular",
+
+  // Карточка заказа
+  orderCard: "border rounded-2xl p-5 md:p-6 shadow-md bg-white mb-6",
+  orderHeader: "flex flex-col md:flex-row md:justify-between gap-4 pb-4",
+  orderTitle: "text-xl md:text-2xl font-bold text-[#39C6FF] mb-2 forma-textBold",
+  orderMeta: "grid grid-cols-2 gap-x-4 gap-y-2 text-sm md:text-base forma-textRegular",
+  orderMetaLabel: "text-gray-500 forma-textRegular tracking-wider",
+  orderMetaValue: "text-gray-800 forma-textRegular tracking-wider",
+  orderStatus: (status: string) => `
+    px-3 py-1 rounded-full text-sm font-medium forma-textBold
+    ${status === "Готовится" ? 'bg-blue-100 text-blue-800' :
+      status === "Завершен" ? 'bg-green-100 text-green-800' :
+        'bg-red-100 text-red-800'}
+  `,
+  orderComment: "text-gray-600 italic mt-2 text-sm forma-textRegular tracking-wider",
+
+  // Кнопки управления
+  actionButtons: "flex flex-col sm:flex-row gap-2 mt-4 md:mt-0 md:ml-4",
+  completeButton: `
+    px-5 py-2 bg-[#39C6FF] text-white rounded-xl hover:bg-[#39dbff]
+    transition-colors duration-200 font-medium flex items-center justify-center
+    gap-2 min-w-[120px] forma-textBold
+  `,
+  cancelButton: `
+    px-5 py-2 bg-[#A5A5A5] text-white rounded-xl hover:bg-[#c2c2c2]
+    transition-colors duration-200 font-medium flex items-center justify-center
+    gap-2 min-w-[120px] forma-textBold
+  `,
+
+  // Состав заказа
+  orderItems: "mt-4",
+  itemsTitle: "font-bold text-lg text-[#39C6FF] mb-3 forma-textBold",
+  itemsHeader: "grid grid-cols-12 gap-4 py-2 font-medium text-gray-500 text-sm forma-textBold",
+  itemContainer: `
+    grid grid-cols-12 gap-4 py-3 items-center last:border-b-0
+    hover:bg-gray-50 rounded-lg px-2 transition-colors
+  `,
+  itemImage: "w-12 h-12 object-cover rounded-lg col-span-1",
+  itemName: "text-gray-800 font-medium col-span-6 md:col-span-5 forma-textRegular",
+  itemQuantity: "text-gray-600 text-center col-span-2 md:col-span-1 forma-textRegular",
+  itemPrice: "text-gray-800 font-medium text-right col-span-3 md:col-span-2 forma-textRegular",
+  itemTotal: "font-bold text-[#39C6FF] text-right col-span-3 forma-textBold",
+
+  // Итого
+  orderTotal: "flex justify-between items-center mt-4 pt-4",
+  totalLabel: "font-bold text-lg forma-textBold",
+  totalPrice: "font-bold text-2xl text-[#39C6FF] forma-textBold tracking-wider",
+
+  // Кнопка выхода
+  logoutButton: "mt-8 flex justify-center"
+} as const;

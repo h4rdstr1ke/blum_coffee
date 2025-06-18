@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ProductInfoModal } from './ProductInfoModal';
 import { useCart } from '../../../context/CartContext';
+import { useUser } from '../../../context/UserContext';
 import { motion } from 'framer-motion';
 import { Product } from '../../../types/index';
 import { textStylesShop } from '../../../style/textStyles';
@@ -8,9 +9,12 @@ import { textStylesShop } from '../../../style/textStyles';
 export default function ProductCard({ item }: { item: Product }) {
     const [showInfo, setShowInfo] = useState(false);
     const { addToCart } = useCart();
+    const { isEmployee } = useUser();
 
     const handleAddToCart = () => {
-        addToCart(item);
+        if (!isEmployee) {
+            addToCart(item);
+        }
     };
 
     return (

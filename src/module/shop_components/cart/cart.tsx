@@ -2,11 +2,17 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../../../context/CartContext';
+import { useUser } from '../../../context/UserContext';
 import { textStylesShop } from '../../../style/textStyles';
 
 export default function Cart() {
   const [isAnimating, setIsAnimating] = useState(false);
   const { totalItems } = useCart();
+  const { isEmployee } = useUser();
+
+  if (isEmployee) {
+    return null;
+  }
 
   const handleClick = () => {
     setIsAnimating(true);

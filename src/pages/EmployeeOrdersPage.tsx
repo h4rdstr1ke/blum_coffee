@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import Header from "../module/header/header";
 import Footer from "../module/footer/footer";
-import { cartStyles } from '../style/textStyles';
+import LogoutButton from '../module/logoutButton/logoutButton';
+import { textStylesEmployeeOrders } from '../style/textStyles';
 
 const API_BASE_URL = "http://193.23.219.155:4747/api/v1";
 
@@ -57,8 +58,6 @@ export default function EmployeeOrdersPage() {
             if (!response.ok) throw new Error('Ошибка загрузки заказов');
 
             const data = await response.json();
-
-            // Преобразуем данные в массив, если это необходимо
             const ordersData = Array.isArray(data) ? data : Object.values(data);
             setOrders(ordersData);
         } catch (err) {
@@ -97,82 +96,149 @@ export default function EmployeeOrdersPage() {
     }
 
     return (
-        <div className="">
+        <div className="bg-gray-50 min-h-screen pb-12">
             <Header />
-            <div className="max-w-[1440px] mx-auto p-4">
-                <h1 className="text-3xl text-[#39C6FF] font-bold mb-6">Панель управления заказами</h1>
+            <div className={textStylesEmployeeOrders.pageContainer}>
+                <h1 className={textStylesEmployeeOrders.pageTitle}>
+                    Панель управления заказами
+                </h1>
 
-                {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
+                {error && (
+                    <div className={textStylesEmployeeOrders.errorContainer}>
+                        {error}
+                    </div>
+                )}
 
                 {isLoading ? (
-                    <p>Загрузка заказов...</p>
+                    <p className={textStylesEmployeeOrders.loadingText}>
+                        Загрузка заказов...
+                    </p>
                 ) : orders.length === 0 ? (
-                    <p>Нет активных заказов</p>
+                    <p className={textStylesEmployeeOrders.emptyText}>
+                        Нет активных заказов
+                    </p>
                 ) : (
                     <div className="space-y-6">
                         {orders.map((order) => (
-                            <div key={order.id} className="border rounded-lg p-4 shadow-sm">
-                                <div className="flex flex-col md:flex-row md:justify-between gap-4">
+                            <div key={order.id} className={textStylesEmployeeOrders.orderCard}>
+                                <div className={textStylesEmployeeOrders.orderHeader}>
                                     <div>
-                                        <h2 className="text-xl font-bold">Заказ #{order.id}</h2>
-                                        <p>Статус: <span className={
-                                            order.status === "Готовится" ? 'text-blue-600' :
-                                                order.status === "Завершен" ? 'text-green-600' :
-                                                    'text-red-600'
-                                        }>{order.status}</span></p>
-                                        <p>Время выполнения: {order.completion_datetime}</p>
-                                        <p>Сумма: {order.price}₽</p>
-                                        {order.comment && <p>Комментарий: {order.comment}</p>}
-                                        <p>Дата создания: {new Date(order.created_at).toLocaleString()}</p>
+                                        <h2 className={textStylesEmployeeOrders.orderTitle}>
+                                            Заказ #{order.id}
+                                        </h2>
+                                        <div className={textStylesEmployeeOrders.orderMeta}>
+                                            <span className={textStylesEmployeeOrders.orderMetaLabel}>Статус:</span>
+                                            <span className={textStylesEmployeeOrders.orderStatus(order.status)}>
+                                                {order.status}
+                                            </span>
+
+                                            <span className={textStylesEmployeeOrders.orderMetaLabel}>Дата создания:</span>
+                                            <span className={textStylesEmployeeOrders.orderMetaValue}>
+                                                {new Date(order.created_at).toLocaleString()}
+                                            </span>
+
+                                            <span className={textStylesEmployeeOrders.orderMetaLabel}>Заказ заказан на:</span>
+                                            <span className={textStylesEmployeeOrders.orderMetaValue}>
+                                                {new Date(order.completion_datetime).toLocaleString()}
+                                            </span>
+                                        </div>
+                                        {order.comment && (
+                                            <p className={textStylesEmployeeOrders.orderComment}>
+                                                Комментарий: {order.comment}
+                                            </p>
+                                        )}
                                     </div>
 
                                     {order.status === "Готовится" && (
-                                        <div className="flex flex-col gap-2">
+                                        <div className={textStylesEmployeeOrders.actionButtons}>
                                             <button
                                                 onClick={() => updateOrderStatus(order.id, 'complete')}
-                                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                                className={textStylesEmployeeOrders.completeButton}
                                             >
+                                                <CheckIcon className="w-5 h-5" />
                                                 Завершить
                                             </button>
                                             <button
                                                 onClick={() => updateOrderStatus(order.id, 'cancel')}
-                                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                                className={textStylesEmployeeOrders.cancelButton}
                                             >
+                                                <XIcon className="w-5 h-5" />
                                                 Отменить
                                             </button>
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="mt-4 border-t pt-4">
-                                    <h3 className="font-bold mb-2">Состав заказа:</h3>
+                                <div className={textStylesEmployeeOrders.orderItems}>
+                                    <h3 className={textStylesEmployeeOrders.itemsTitle}>
+                                        Состав заказа
+                                    </h3>
+
+                                    <div className={textStylesEmployeeOrders.itemsHeader}>
+                                        <div className="col-span-7 md:col-span-6">Товар</div>
+                                        <div className="col-span-2 text-center">Кол-во</div>
+                                        <div className="col-span-3 text-right">Цена</div>
+                                    </div>
+
                                     {order.products.map((product, i) => (
-                                        <div key={i} className="flex justify-between items-center py-2 border-b last:border-b-0">
-                                            <div className="flex items-center gap-3">
+                                        <div key={i} className={textStylesEmployeeOrders.itemContainer}>
+                                            <div className="col-span-1">
                                                 {product.image && (
                                                     <img
                                                         src={product.image}
                                                         alt={product.name}
-                                                        className="w-16 h-16 object-cover rounded"
+                                                        className={textStylesEmployeeOrders.itemImage}
                                                     />
                                                 )}
-                                                <span>{product.name}</span>
                                             </div>
-                                            <div className="text-right">
-                                                <span className="block">× {product.quantity}</span>
-                                                <span className="font-bold">
-                                                    {product.price * product.quantity}₽
-                                                </span>
+                                            <div className={textStylesEmployeeOrders.itemName}>
+                                                {product.name}
+                                            </div>
+                                            <div className={textStylesEmployeeOrders.itemQuantity}>
+                                                × {product.quantity}
+                                            </div>
+                                            <div className={textStylesEmployeeOrders.itemPrice}>
+                                                {product.price}₽
                                             </div>
                                         </div>
                                     ))}
+
+                                    <div className={textStylesEmployeeOrders.orderTotal}>
+                                        <span className={textStylesEmployeeOrders.totalLabel}>
+                                            Итого:
+                                        </span>
+                                        <span className={textStylesEmployeeOrders.totalPrice}>
+                                            {order.price}₽
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
+
+                <div className={textStylesEmployeeOrders.logoutButton}>
+                    <LogoutButton className="px-6 py-3 forma-textBold" />
+                </div>
             </div>
             <Footer />
         </div>
     );
+    // Иконки для кнопок 
+    function CheckIcon({ className }: { className?: string }) {
+        return (
+            <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+        )
+    }
+
+    function XIcon({ className }: { className?: string }) {
+        return (
+            <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+        )
+    }
+
 }

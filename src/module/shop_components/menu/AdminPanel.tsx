@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { textStylesShop } from '../../../style/textStyles';
+import { useUser } from '../../../context/UserContext';
 
 interface Category {
     id: number;
@@ -36,9 +37,9 @@ interface Ingredient {
 }
 
 const API_BASE_URL = 'http://193.23.219.155:4747/api/v1';
-const ADMIN_TOKEN = '5|k9BeVT4QeVM4S8g4OCrtuGJTLx8LwROOugJpHRVTb5110686';
 
 export default function AdminPanel() {
+    const { isEmployee } = useUser();
     const [categories, setCategories] = useState<Category[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
@@ -67,21 +68,21 @@ export default function AdminPanel() {
         unit: ''
     });
     const [productImage, setProductImage] = useState<File | null>(null);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
 
     useEffect(() => {
-        if (isAdmin) {
+        if (isEmployee) {
             fetchData();
         }
-    }, [isAdmin]);
+    }, [isEmployee]);
 
     const fetchData = async () => {
         try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
+
             const headers = {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${ADMIN_TOKEN}`
+                'Authorization': `Bearer ${token}`
             };
 
             const [categoriesRes, productsRes, ingredientsRes] = await Promise.all([
@@ -121,38 +122,18 @@ export default function AdminPanel() {
         }
     };
 
-    const handleAdminLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const response = await fetch(`${API_BASE_URL}/login-employee`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ login, password })
-            });
-
-            if (response.ok) {
-                setIsAdmin(true);
-            } else {
-                alert('Неверные учетные данные');
-            }
-        } catch (error) {
-            console.error('Ошибка входа:', error);
-            alert('Ошибка при входе');
-        }
-    };
-
     const createCategory = async () => {
         if (!newCategory.name.trim()) return;
 
         try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
+
             const response = await fetch(`${API_BASE_URL}/category`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${ADMIN_TOKEN}`
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(newCategory)
             });
@@ -173,13 +154,14 @@ export default function AdminPanel() {
 
     const deleteCategory = async (id: number) => {
         if (!confirm('Удалить категорию и все её продукты?')) return;
-
+        const token = localStorage.getItem('employee_token');
+        if (!token) return;
         try {
             const response = await fetch(`${API_BASE_URL}/category/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${ADMIN_TOKEN}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
@@ -207,11 +189,13 @@ export default function AdminPanel() {
             let ingredientName = newIngredient.name;
 
             if (!ingredientId && newIngredient.name) {
+                const token = localStorage.getItem('employee_token');
+                if (!token) return;
                 const response = await fetch(`${API_BASE_URL}/ingredient`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${ADMIN_TOKEN}`
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ name: newIngredient.name })
                 });
@@ -272,7 +256,8 @@ export default function AdminPanel() {
 
         try {
             const formData = new FormData();
-
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
             formData.append('name', newProduct.name);
             formData.append('price', newProduct.price.toString());
             formData.append('weight', newProduct.weight.toString());
@@ -305,7 +290,7 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${ADMIN_TOKEN}`
+                    'Authorization': `Bearer ${token}`
                 },
                 body: formData
             });
@@ -335,11 +320,13 @@ export default function AdminPanel() {
         if (!confirm('Удалить этот продукт?')) return;
 
         try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
             const response = await fetch(`${API_BASE_URL}/product/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${ADMIN_TOKEN}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
@@ -382,62 +369,7 @@ export default function AdminPanel() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    if (!isAdmin) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md"
-                >
-                    <div>
-                        <h2 className={`${textStylesShop.sectionTitle} text-center`}>Вход для администратора</h2>
-                    </div>
-                    <form className="mt-8 space-y-6" onSubmit={handleAdminLogin}>
-                        <div className="rounded-md shadow-sm space-y-4">
-                            <div>
-                                <label htmlFor="login" className="block text-sm font-medium text-gray-700">
-                                    Логин
-                                </label>
-                                <input
-                                    id="login"
-                                    name="login"
-                                    type="text"
-                                    required
-                                    value={login}
-                                    onChange={(e) => setLogin(e.target.value)}
-                                    className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                    Пароль
-                                </label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
-                                />
-                            </div>
-                        </div>
 
-                        <div>
-                            <button
-                                type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                            >
-                                Войти
-                            </button>
-                        </div>
-                    </form>
-                </motion.div>
-            </div>
-        );
-    }
 
     return (
         <div className="p-4 max-w-6xl mx-auto">
@@ -794,7 +726,7 @@ export default function AdminPanel() {
                                                             {product.ingredients.map((ing, i) => (
                                                                 <li key={i} className="flex justify-between">
                                                                     <span>{ing.name || 'Неизвестный ингредиент'}</span>
-                                                                    <span>{ing.quantity} {ing.unit}</span>
+                                                                    <span>{ing.unit}</span>
                                                                 </li>
                                                             ))}
                                                         </ul>
