@@ -72,7 +72,7 @@ export const textStylesShop = {
     infoIcon: "w-5 h-5",
     title: "forma-textMedium text-[#FFFFFF] text-bold md:text-[28px]  mb-1 md:mb-2",
     price: "forma-textMedium text-[#FFFFFF] md:text-[28px] absolute -top-5 md:-top-12 right-4 md:right-0 text-lg font-bold",
-    addButton: "forma-textMedium text-[#FFFFFF] bg-[#39C6FF] md:text-[24px] px-4 md:px-6 rounded-lg md:rounded-xl flex "
+    addButton: "forma-textMedium text-[#FFFFFF] bg-[#39C6FF] md:text-[24px] px-5 md:px-6 rounded-lg md:rounded-xl flex "
   },
 
   // Стили для ProductInfoModal
