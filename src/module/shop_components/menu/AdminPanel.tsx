@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { textStylesShop } from '../../../style/textStyles';
+import { textStylesPanel } from '../../../style/textStyles';
 import { useUser } from '../../../context/UserContext';
 
 interface Category {
@@ -68,6 +68,8 @@ export default function AdminPanel() {
         unit: ''
     });
     const [productImage, setProductImage] = useState<File | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
         if (isEmployee) {
@@ -118,12 +120,15 @@ export default function AdminPanel() {
             }
         } catch (error) {
             console.error('Ошибка загрузки данных:', error);
-            alert('Ошибка при загрузке данных');
+            setError('Ошибка при загрузке данных');
         }
     };
 
     const createCategory = async () => {
-        if (!newCategory.name.trim()) return;
+        if (!newCategory.name.trim()) {
+            setError('Введите название категории');
+            return;
+        }
 
         try {
             const token = localStorage.getItem('employee_token');
@@ -145,18 +150,21 @@ export default function AdminPanel() {
             const data = await response.json();
             setCategories([...categories, data]);
             setNewCategory({ name: '' });
-            alert(`Категория "${data.name}" создана!`);
+            setSuccess(`Категория "${data.name}" создана!`);
+            setTimeout(() => setSuccess(null), 3000);
         } catch (error) {
             console.error('Ошибка:', error);
-            alert(error instanceof Error ? error.message : 'Ошибка создания категории');
+            setError(error instanceof Error ? error.message : 'Ошибка создания категории');
         }
     };
 
     const deleteCategory = async (id: number) => {
         if (!confirm('Удалить категорию и все её продукты?')) return;
-        const token = localStorage.getItem('employee_token');
-        if (!token) return;
+
         try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
+
             const response = await fetch(`${API_BASE_URL}/category/${id}`, {
                 method: 'DELETE',
                 headers: {
@@ -171,16 +179,17 @@ export default function AdminPanel() {
 
             setCategories(categories.filter(c => c.id !== id));
             setProducts(products.filter(p => p.category?.id !== id));
-            alert('Категория удалена!');
+            setSuccess('Категория удалена!');
+            setTimeout(() => setSuccess(null), 3000);
         } catch (error) {
             console.error('Ошибка:', error);
-            alert(error instanceof Error ? error.message : 'Ошибка удаления категории');
+            setError(error instanceof Error ? error.message : 'Ошибка удаления категории');
         }
     };
 
     const addIngredient = async () => {
         if (!newIngredient.ingredient_id && !newIngredient.name?.trim()) {
-            alert('Выберите ингредиент или введите название нового');
+            setError('Выберите ингредиент или введите название нового');
             return;
         }
 
@@ -191,6 +200,7 @@ export default function AdminPanel() {
             if (!ingredientId && newIngredient.name) {
                 const token = localStorage.getItem('employee_token');
                 if (!token) return;
+
                 const response = await fetch(`${API_BASE_URL}/ingredient`, {
                     method: 'POST',
                     headers: {
@@ -235,7 +245,7 @@ export default function AdminPanel() {
             });
         } catch (error) {
             console.error('Ошибка:', error);
-            alert(error instanceof Error ? error.message : 'Ошибка добавления ингредиента');
+            setError(error instanceof Error ? error.message : 'Ошибка добавления ингредиента');
         }
     };
 
@@ -250,7 +260,7 @@ export default function AdminPanel() {
 
     const saveProduct = async () => {
         if (!newProduct.name || !newProduct.category || newProduct.price <= 0) {
-            alert('Заполните обязательные поля: название, категория и цена');
+            setError('Заполните обязательные поля: название, категория и цена');
             return;
         }
 
@@ -258,6 +268,7 @@ export default function AdminPanel() {
             const formData = new FormData();
             const token = localStorage.getItem('employee_token');
             if (!token) return;
+
             formData.append('name', newProduct.name);
             formData.append('price', newProduct.price.toString());
             formData.append('weight', newProduct.weight.toString());
@@ -309,10 +320,11 @@ export default function AdminPanel() {
             );
 
             resetProductForm();
-            alert(`Продукт "${savedProduct.name}" успешно сохранён!`);
+            setSuccess(`Продукт "${savedProduct.name}" успешно сохранён!`);
+            setTimeout(() => setSuccess(null), 3000);
         } catch (error) {
             console.error('Ошибка:', error);
-            alert(error instanceof Error ? error.message : 'Ошибка сохранения продукта');
+            setError(error instanceof Error ? error.message : 'Ошибка сохранения продукта');
         }
     };
 
@@ -322,6 +334,7 @@ export default function AdminPanel() {
         try {
             const token = localStorage.getItem('employee_token');
             if (!token) return;
+
             const response = await fetch(`${API_BASE_URL}/product/${id}`, {
                 method: 'DELETE',
                 headers: {
@@ -335,10 +348,11 @@ export default function AdminPanel() {
             }
 
             setProducts(products.filter(p => p.id !== id));
-            alert('Продукт удалён!');
+            setSuccess('Продукт удалён!');
+            setTimeout(() => setSuccess(null), 3000);
         } catch (error) {
             console.error('Ошибка:', error);
-            alert(error instanceof Error ? error.message : 'Ошибка удаления продукта');
+            setError(error instanceof Error ? error.message : 'Ошибка удаления продукта');
         }
     };
 
@@ -359,6 +373,7 @@ export default function AdminPanel() {
             ingredients: []
         });
         setProductImage(null);
+        setError(null);
     };
 
     const editProduct = (product: Product) => {
@@ -369,64 +384,67 @@ export default function AdminPanel() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-
-
     return (
-        <div className="p-4 max-w-6xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Админ-панель меню</h1>
+        <div className={textStylesPanel.container}>
+            <h1 className={textStylesPanel.title}>Админ-панель меню</h1>
 
-            <section className="mb-8 p-4 bg-white rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4">Управление категориями</h2>
+            {/* Сообщения об ошибках и успехе */}
+            {error && <div className={textStylesPanel.errorText}>{error}</div>}
+            {success && <div className={textStylesPanel.successText}>{success}</div>}
+
+            <section className={textStylesPanel.section}>
+                <h2 className={textStylesPanel.sectionTitle}>Управление категориями</h2>
                 <div className="flex gap-2 mb-4">
                     <input
                         type="text"
                         value={newCategory.name}
                         onChange={(e) => setNewCategory({ name: e.target.value })}
-                        className="flex-1 p-2 border rounded"
+                        className={textStylesPanel.input}
                         placeholder="Название новой категории"
                     />
                     <button
                         onClick={createCategory}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className={textStylesPanel.successButton}
                     >
                         Добавить категорию
                     </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+
+                <div className={textStylesPanel.gridCols3}>
                     {categories.map(category => (
-                        <div key={category.id} className="flex justify-between items-center p-3 bg-gray-50 rounded border">
+                        <div key={category.id} className={textStylesPanel.categoryCard}>
                             <span className="font-medium">{category.name}</span>
                             <button
                                 onClick={() => deleteCategory(category.id)}
                                 className="text-red-600 hover:text-red-800 p-1"
                                 title="Удалить категорию"
                             >
-                                🗑️
+                                ❌
                             </button>
                         </div>
                     ))}
                 </div>
             </section>
 
-            <section className="mb-8 p-4 bg-white rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4">
+            <section className={textStylesPanel.section}>
+                <h2 className={textStylesPanel.sectionTitle}>
                     {newProduct.id ? 'Редактирование продукта' : 'Добавление нового продукта'}
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className={textStylesPanel.gridCols2}>
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Название продукта:</label>
+                        <label className={textStylesPanel.inputLabel}>Название продукта:</label>
                         <input
                             type="text"
                             value={newProduct.name}
                             onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Категория:</label>
+                        <label className={textStylesPanel.inputLabel}>Категория:</label>
                         <select
                             value={newProduct.category?.id || ''}
                             onChange={(e) => {
@@ -439,7 +457,7 @@ export default function AdminPanel() {
                                     } : null
                                 });
                             }}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.select}
                             required
                         >
                             <option value="">Выберите категорию</option>
@@ -450,101 +468,101 @@ export default function AdminPanel() {
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Цена (₽):</label>
+                        <label className={textStylesPanel.inputLabel}>Цена (₽):</label>
                         <input
                             type="number"
                             value={newProduct.price}
                             onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="1"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Вес (г):</label>
+                        <label className={textStylesPanel.inputLabel}>Вес (г):</label>
                         <input
                             type="number"
                             value={newProduct.weight}
                             onChange={(e) => setNewProduct({ ...newProduct, weight: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="0"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Энергетическая ценность (ккал):</label>
+                        <label className={textStylesPanel.inputLabel}>Энергетическая ценность (ккал):</label>
                         <input
                             type="number"
                             value={newProduct.energy_value}
                             onChange={(e) => setNewProduct({ ...newProduct, energy_value: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="0"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Белки (г):</label>
+                        <label className={textStylesPanel.inputLabel}>Белки (г):</label>
                         <input
                             type="number"
                             value={newProduct.proteins}
                             onChange={(e) => setNewProduct({ ...newProduct, proteins: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="0"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Жиры (г):</label>
+                        <label className={textStylesPanel.inputLabel}>Жиры (г):</label>
                         <input
                             type="number"
                             value={newProduct.fats}
                             onChange={(e) => setNewProduct({ ...newProduct, fats: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="0"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Углеводы (г):</label>
+                        <label className={textStylesPanel.inputLabel}>Углеводы (г):</label>
                         <input
                             type="number"
                             value={newProduct.carbohydrates}
                             onChange={(e) => setNewProduct({ ...newProduct, carbohydrates: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="0"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Количество (шт):</label>
+                        <label className={textStylesPanel.inputLabel}>Количество (шт):</label>
                         <input
                             type="number"
                             value={newProduct.amount}
                             onChange={(e) => setNewProduct({ ...newProduct, amount: Number(e.target.value) })}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             min="1"
                             required
                         />
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className="block mb-1 text-sm font-medium">Изображение:</label>
+                        <label className={textStylesPanel.inputLabel}>Изображение:</label>
                         <input
                             type="file"
                             onChange={(e) => setProductImage(e.target.files?.[0] || null)}
-                            className="w-full p-2 border rounded"
+                            className={textStylesPanel.input}
                             accept="image/*"
                         />
                     </div>
                 </div>
 
-                <div className="mb-4">
+                <div className="mt-6">
                     <h3 className="font-medium mb-2">Состав продукта:</h3>
                     <div className="flex flex-wrap gap-2 mb-2">
                         <select
@@ -567,7 +585,7 @@ export default function AdminPanel() {
                                     });
                                 }
                             }}
-                            className="flex-1 min-w-[200px] p-2 border rounded"
+                            className={textStylesPanel.select}
                         >
                             <option value="">Выберите ингредиент</option>
                             {allIngredients.map(ing => (
@@ -580,7 +598,7 @@ export default function AdminPanel() {
                                 type="text"
                                 value={newIngredient.name || ''}
                                 onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
-                                className="flex-1 min-w-[200px] p-2 border rounded"
+                                className={textStylesPanel.input}
                                 placeholder="Название нового ингредиента"
                             />
                         )}
@@ -589,13 +607,13 @@ export default function AdminPanel() {
                             type="text"
                             value={newIngredient.unit}
                             onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })}
-                            className="w-40 p-2 border rounded"
+                            className={textStylesPanel.input}
                             placeholder="Единица измерения"
                         />
 
                         <button
                             onClick={addIngredient}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                            className={textStylesPanel.successButton}
                         >
                             Добавить
                         </button>
@@ -604,10 +622,14 @@ export default function AdminPanel() {
                     {newProduct.ingredients.length > 0 && (
                         <div className="space-y-2">
                             {newProduct.ingredients.map((ing, index) => (
-                                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                                <div key={index} className={textStylesPanel.ingredientItem}>
                                     <div>
-                                        <span className="font-medium">{ing.name || 'Неизвестный ингредиент'}</span>
-                                        <span className="ml-2 text-gray-600">{ing.quantity} {ing.unit}</span>
+                                        <span className={textStylesPanel.ingredientName}>
+                                            {ing.name || 'Неизвестный ингредиент'}
+                                        </span>
+                                        <span className={textStylesPanel.ingredientQuantity}>
+                                            {ing.quantity} {ing.unit}
+                                        </span>
                                     </div>
                                     <button
                                         onClick={() => removeIngredient(index)}
@@ -621,10 +643,10 @@ export default function AdminPanel() {
                     )}
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-6">
                     <button
                         onClick={saveProduct}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className={textStylesPanel.primaryButton}
                         disabled={!newProduct.name || !newProduct.category || newProduct.price <= 0}
                     >
                         {newProduct.id ? 'Сохранить изменения' : 'Добавить продукт'}
@@ -634,13 +656,13 @@ export default function AdminPanel() {
                         <>
                             <button
                                 onClick={resetProductForm}
-                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                                className={textStylesPanel.secondaryButton}
                             >
                                 Отменить
                             </button>
                             <button
                                 onClick={() => newProduct.id && deleteProduct(newProduct.id)}
-                                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                                className={textStylesPanel.dangerButton}
                             >
                                 Удалить продукт
                             </button>
@@ -649,8 +671,8 @@ export default function AdminPanel() {
                 </div>
             </section>
 
-            <section>
-                <h2 className="text-xl font-semibold mb-4">Текущее меню</h2>
+            <section className={textStylesPanel.section}>
+                <h2 className={textStylesPanel.sectionTitle}>Текущее меню</h2>
 
                 {categories.length === 0 ? (
                     <p className="text-gray-500">Нет категорий</p>
@@ -683,7 +705,7 @@ export default function AdminPanel() {
                                             });
                                             window.scrollTo({ top: 0, behavior: 'smooth' });
                                         }}
-                                        className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                                        className={textStylesPanel.successButton}
                                     >
                                         + Добавить продукт
                                     </button>
@@ -692,15 +714,15 @@ export default function AdminPanel() {
                                 {categoryProducts.length === 0 ? (
                                     <p className="text-gray-500 pl-3">Нет продуктов в этой категории</p>
                                 ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div className={textStylesPanel.gridCols3}>
                                         {categoryProducts.map(product => (
-                                            <div key={product.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                            <div key={product.id} className={textStylesPanel.productCard}>
                                                 <div className="flex justify-between items-start mb-2">
                                                     <div>
-                                                        <h4 className="font-semibold text-lg">{product.name}</h4>
-                                                        <p className="text-blue-600 font-bold">{product.price}₽</p>
-                                                        {product.weight && <p className="text-sm text-gray-500">Вес: {product.weight}г</p>}
-                                                        <p className="text-sm text-gray-500">Ккал: {product.energy_value}</p>
+                                                        <h4 className={textStylesPanel.productTitle}>{product.name}</h4>
+                                                        <p className={textStylesPanel.productPrice}>{product.price}₽</p>
+                                                        {product.weight && <p className={textStylesPanel.productMeta}>Вес: {product.weight}г</p>}
+                                                        <p className={textStylesPanel.productMeta}>Ккал: {product.energy_value}</p>
                                                     </div>
                                                     <button
                                                         onClick={() => editProduct(product)}
@@ -726,7 +748,7 @@ export default function AdminPanel() {
                                                             {product.ingredients.map((ing, i) => (
                                                                 <li key={i} className="flex justify-between">
                                                                     <span>{ing.name || 'Неизвестный ингредиент'}</span>
-                                                                    <span>{ing.unit}</span>
+                                                                    <span>{ing.quantity} {ing.unit}</span>
                                                                 </li>
                                                             ))}
                                                         </ul>

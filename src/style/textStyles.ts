@@ -487,7 +487,7 @@ export const textStylesEmployeeOrders = {
   emptyText: "text-center text-[#39C6FF] text-xl py-12 forma-textRegular",
 
   // Карточка заказа
-  orderCard: "border rounded-2xl p-5 md:p-6 shadow-md bg-white mb-6",
+  orderCard: "     rounded-2xl p-5 md:p-6 shadow-md bg-white mb-6",
   orderHeader: "flex flex-col md:flex-row md:justify-between gap-4 pb-4",
   orderTitle: "text-xl md:text-2xl font-bold text-[#39C6FF] mb-2 forma-textBold",
   orderMeta: "grid grid-cols-2 gap-x-4 gap-y-2 text-sm md:text-base forma-textRegular",
@@ -536,3 +536,44 @@ export const textStylesEmployeeOrders = {
   // Кнопка выхода
   logoutButton: "mt-8 flex justify-center"
 } as const;
+
+export const textStylesPanel = {
+  container: "p-4 max-w-6xl mx-auto bg-gray-50 rounded-lg shadow-sm",
+  title: "text-3xl font-bold mb-8 text-[#39C6FF]",
+  section: "mb-8 p-6 bg-white rounded-lg shadow",
+  sectionTitle: "text-2xl font-semibold mb-6 text-[#39C6FF]",
+
+  // Формы
+  input: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#39C6FF] focus:border-transparent",
+  inputLabel: "block mb-2 text-sm font-medium text-gray-700",
+  textarea: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#39C6FF] focus:border-transparent",
+  select: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#39C6FF] focus:border-transparent",
+
+  // Кнопки
+  primaryButton: "px-6 py-3 bg-[#39C6FF] text-white rounded-lg hover:bg-[#2FB0E0] transition-colors",
+  secondaryButton: "px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors",
+  dangerButton: "px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors",
+  successButton: "px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors",
+
+  // Карточки
+  categoryCard: "flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors",
+  productCard: "border rounded-lg p-4 hover:shadow-md transition-shadow bg-white",
+  productTitle: "font-semibold text-lg text-gray-800",
+  productPrice: "text-blue-600 font-bold",
+  productMeta: "text-sm text-gray-500",
+
+  // Ингредиенты
+  ingredientItem: "flex items-center justify-between p-3 bg-gray-50 rounded border",
+  ingredientName: "font-medium text-gray-800",
+  ingredientQuantity: "ml-2 text-gray-600",
+
+  // Сетки
+  gridCols1: "grid grid-cols-1 gap-4",
+  gridCols2: "grid grid-cols-1 md:grid-cols-2 gap-4",
+  gridCols3: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4",
+
+  // Разное
+  divider: "my-6 border-t border-gray-200",
+  errorText: "text-red-600 text-sm",
+  successText: "text-green-600 text-sm"
+};
