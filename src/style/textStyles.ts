@@ -432,3 +432,47 @@ export const cartStyles = {
   backLink: "block text-center text-[#39C6FF] hover:underline mt-4",
   emptyCartText: "py-4 text-center text-gray-500",
 } as const;
+
+export const textStylesReg = {
+  // Общие стили страницы
+  pageContainer: "min-h-screen flex items-center justify-center bg-[#7EDAFF] p-4",
+  formContainer: "bg-white p-8 rounded-3xl shadow-lg w-full max-w-md",
+  title: "text-3xl font-bold text-center mb-6 text-[#39C6FF]",
+
+  // Стили для ошибок
+  errorContainer: "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4",
+
+  // Стили для полей ввода
+  inputLabel: "block text-sm font-medium text-gray-700 mb-1",
+  inputField: `
+    w-full p-3 border-2 border-[#7EDAFF] rounded-xl
+    focus:outline-none focus:ring-2 focus:ring-[#39C6FF]
+    text-gray-800 text-lg
+    transition-all duration-200
+  `,
+  inputError: "border-red-500 focus:ring-red-500",
+
+  // Стили для кнопок
+  primaryButton: `
+    w-full bg-[#39C6FF] text-white py-3 px-4 rounded-xl
+    hover:bg-[#2fb0e6] focus:outline-none focus:ring-2 focus:ring-[#39C6FF]
+    disabled:opacity-50 disabled:cursor-not-allowed
+    font-bold text-lg
+    transition-all duration-200
+  `,
+  secondaryButton: `
+    w-full text-[#39C6FF] hover:text-[#2fb0e6] text-sm
+    focus:outline-none
+    transition-colors duration-200
+  `,
+
+  // Стили для переключения режимов
+  modeSwitchContainer: "flex justify-center space-x-4 mt-6",
+  modeButton: (active: boolean) => `
+    text-sm ${active ? 'text-[#39C6FF] font-bold' : 'text-gray-600 hover:text-[#39C6FF]'}
+    transition-colors duration-200
+  `,
+
+  // Стили для сообщения о коде
+  codeSentMessage: "text-sm text-gray-600 mb-2",
+} as const;

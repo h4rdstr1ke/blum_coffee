@@ -1,5 +1,15 @@
 import { createContext, useContext, useReducer, ReactNode, useMemo } from 'react';
-import { Product, CartItem } from '../types';
+
+type Product = {
+    id: number;
+    title: string;
+    price: number;
+    src: string;
+};
+
+type CartItem = Product & {
+    quantity: number;
+};
 
 type CartState = {
     items: CartItem[];
@@ -7,6 +17,7 @@ type CartState = {
 
 type CartAction =
     | { type: 'ADD_ITEM'; payload: Product }
+    | { type: 'ADD_ITEMS'; payload: { item: Product; quantity: number } }
     | { type: 'REMOVE_ITEM'; payload: { id: number } }
     | { type: 'UPDATE_QUANTITY'; payload: { id: number; quantity: number } }
     | { type: 'CLEAR_CART' };
@@ -14,6 +25,7 @@ type CartAction =
 type CartContextType = {
     items: CartItem[];
     addToCart: (item: Product) => void;
+    addItemsToCart: (item: Product, quantity: number) => void;
     removeFromCart: (id: number) => void;
     updateQuantity: (id: number, quantity: number) => void;
     clearCart: () => void;
@@ -35,6 +47,17 @@ function cartReducer(state: CartState, action: CartAction): CartState {
                             : item
                     )
                     : [...state.items, { ...action.payload, quantity: 1 }],
+            };
+        case 'ADD_ITEMS':
+            const existingItemMulti = state.items.find(item => item.id === action.payload.item.id);
+            return {
+                items: existingItemMulti
+                    ? state.items.map(item =>
+                        item.id === action.payload.item.id
+                            ? { ...item, quantity: item.quantity + action.payload.quantity }
+                            : item
+                    )
+                    : [...state.items, { ...action.payload.item, quantity: action.payload.quantity }],
             };
         case 'REMOVE_ITEM':
             return {
@@ -59,12 +82,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [state, dispatch] = useReducer(cartReducer, { items: [] });
 
     const totalPrice = useMemo(
-        () => state.items.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0),
+        () => state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
         [state.items]
     );
 
     const totalItems = useMemo(
-        () => state.items.reduce((sum: number, item: CartItem) => sum + item.quantity, 0),
+        () => state.items.reduce((sum, item) => sum + item.quantity, 0),
         [state.items]
     );
 
@@ -73,6 +96,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         totalPrice,
         totalItems,
         addToCart: (item: Product) => dispatch({ type: 'ADD_ITEM', payload: item }),
+        addItemsToCart: (item: Product, quantity: number) =>
+            dispatch({ type: 'ADD_ITEMS', payload: { item, quantity } }),
         removeFromCart: (id: number) => dispatch({ type: 'REMOVE_ITEM', payload: { id } }),
         updateQuantity: (id: number, quantity: number) =>
             dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } }),

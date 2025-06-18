@@ -22,7 +22,7 @@ interface Order {
 }
 
 export default function History() {
-  const { addToCart, clearCart } = useCart();
+  const { addItemsToCart, clearCart } = useCart();
   const { userData } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +50,6 @@ export default function History() {
         if (Array.isArray(data)) {
           ordersData = data;
         } else if (typeof data === 'object' && data !== null) {
-
           ordersData = Object.values(data);
         } else {
           throw new Error('Неверный формат данных заказов');
@@ -70,15 +69,18 @@ export default function History() {
   const handleRepeatOrder = (items: OrderItem[]) => {
     if (items.length === 0) return;
 
-    if (confirm(`Добавить ${items.length} товаров в корзину?`)) {
+    if (confirm(`Добавить ${items.reduce((sum, item) => sum + item.quantity, 0)} товаров в корзину?`)) {
       clearCart();
       items.forEach(item => {
-        addToCart({
-          id: item.id,
-          title: item.name,
-          price: item.price,
-          src: item.image
-        });
+        addItemsToCart(
+          {
+            id: item.id,
+            title: item.name,
+            price: item.price,
+            src: item.image
+          },
+          item.quantity
+        );
       });
       alert('Товары добавлены в корзину!');
     }
@@ -152,7 +154,7 @@ export default function History() {
                 </div>
                 <div className="flex justify-between sm:justify-end items-center gap-4 md:gap-8">
                   <p className={`${textStylesHistory.itemQuantity}`}>{product.quantity} шт.</p>
-                  <p className={`${textStylesHistory.itemPrice}`}>{product.price}₽</p>
+                  <p className={`${textStylesHistory.itemPrice}`}>{product.price * product.quantity}₽</p>
                 </div>
               </div>
             ))}

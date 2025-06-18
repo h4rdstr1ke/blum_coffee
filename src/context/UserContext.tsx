@@ -25,6 +25,7 @@ interface UserContextType {
     userData: ProfileData | null;
     isLoading: boolean;
     error: string | null;
+    clearError: () => void;
     loadUserData: () => Promise<void>;
     isEmployee: boolean;
     logout: () => void;
@@ -42,6 +43,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isEmployee, setIsEmployee] = useState(false);
+    const clearError = () => {
+        setError(null);
+    };
 
     const loadUserData = async () => {
         setIsLoading(true);
@@ -73,7 +77,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 return;
             }
 
-            if (!token) throw new Error('Пользователь не авторизован');
+            if (!token) throw new Error('Вы не авторизованы');
 
             const response = await fetch(`${API_BASE_URL}/user`, {
                 headers: {
@@ -93,7 +97,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             });
             setIsEmployee(false);
         } catch (err) {
-            if (err instanceof Error && err.message !== 'Пользователь не авторизован') {
+            if (err instanceof Error && err.message !== 'Вы не авторизованы') {
                 logout();
             }
             setError(err instanceof Error ? err.message : 'Ошибка загрузки');
@@ -235,6 +239,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             userData,
             isLoading,
             error,
+            clearError,
             loadUserData,
             isEmployee,
             logout,

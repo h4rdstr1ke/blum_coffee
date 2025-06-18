@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
+import { textStylesReg } from '../style/textStyles';
 
 export default function RegPage() {
     const {
@@ -9,22 +10,180 @@ export default function RegPage() {
         loginEmployee,
         sendCode,
         isLoading,
-        error
+        error: apiError,
+        clearError
     } = useUser();
     const navigate = useNavigate();
 
     const [mode, setMode] = useState<'login' | 'register' | 'employee'>('login');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState('+7 ');
     const [code, setCode] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [login, setLogin] = useState('admin');
     const [password, setPassword] = useState('admin');
     const [codeSent, setCodeSent] = useState(false);
+    const [phoneError, setPhoneError] = useState('');
+    const [codeError, setCodeError] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [surnameError, setSurnameError] = useState('');
+    const [localError, setLocalError] = useState('');
+
+    useEffect(() => {
+        if (apiError) {
+            setLocalError(apiError);
+        }
+    }, [apiError]);
+
+    const clearAllErrors = () => {
+        setPhoneError('');
+        setCodeError('');
+        setNameError('');
+        setSurnameError('');
+        setLocalError('');
+        clearError();
+    };
+
+    type JumpPositions = {
+        forward: Record<4 | 9 | 13 | 16, number>;
+        backward: Record<6 | 11 | 15 | 18, number>;
+    };
+
+    const jumpMap: JumpPositions = {
+        forward: { 4: 6, 9: 11, 13: 15, 16: 18 },
+        backward: { 6: 4, 11: 9, 15: 13, 18: 16 }
+    };
+
+    const formatPhoneNumber = (digits: string): string => {
+        let formatted = '+7 ';
+        if (digits.length > 0) {
+            formatted += `(${digits.substring(0, 3)}`;
+            if (digits.length > 3) {
+                formatted += `) ${digits.substring(3, 6)}`;
+                if (digits.length > 6) {
+                    formatted += `-${digits.substring(6, 8)}`;
+                    if (digits.length > 8) {
+                        formatted += `-${digits.substring(8, 10)}`;
+                    }
+                }
+            }
+        }
+        return formatted;
+    };
+
+    const calculateCursorPosition = (
+        cursorPos: number,
+        direction: 'forward' | 'backward' | 'none',
+        newValue: string
+    ): number => {
+        if (direction !== 'none') {
+            const directionMap = jumpMap[direction];
+            const key = cursorPos as keyof typeof directionMap;
+
+            if (key in directionMap) {
+                return directionMap[key];
+            }
+        }
+        return Math.max(3, Math.min(cursorPos, newValue.length));
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        clearAllErrors();
+        const input = e.target.value;
+        const cursorPosition = e.target.selectionStart || 0;
+        const isBackspace = input.length < phone.length;
+
+        if (input.length < 3 || !input.startsWith('+7 ')) {
+            setPhone('+7 ');
+            setTimeout(() => e.target.setSelectionRange(3, 3), 0);
+            return;
+        }
+
+        const cleaned = input.slice(3).replace(/\D/g, '');
+        const formatted = formatPhoneNumber(cleaned);
+        setPhone(formatted);
+
+        const direction = isBackspace ? 'backward' :
+            input.length > phone.length ? 'forward' : 'none';
+
+        const newCursorPosition = calculateCursorPosition(
+            cursorPosition,
+            direction,
+            formatted
+        );
+
+        if (e.target.selectionStart !== newCursorPosition) {
+            setTimeout(() => {
+                e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+            }, 0);
+        }
+    };
+
+    const handlePhoneKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if ((e.key === 'Backspace' || e.key === 'Delete') &&
+            (e.currentTarget.selectionStart || 0) <= 3) {
+            e.preventDefault();
+        }
+
+        if (e.key.length === 1 && !/\d/.test(e.key) &&
+            (e.currentTarget.selectionStart || 0) >= 3) {
+            e.preventDefault();
+        }
+    };
+
+    const validatePhone = (phone: string) => {
+        const cleaned = phone.replace(/\D/g, '');
+        if (!cleaned) {
+            setPhoneError('Введите номер телефона');
+            return false;
+        }
+        if (cleaned.length < 10) {
+            setPhoneError('Номер должен содержать 10 цифр');
+            return false;
+        }
+        setPhoneError('');
+        return true;
+    };
+
+    const validateCode = (code: string) => {
+        if (!code) {
+            setCodeError('Введите код подтверждения');
+            return false;
+        }
+        if (!/^\d{6}$/.test(code)) {
+            setCodeError('Код должен содержать 6 цифр');
+            return false;
+        }
+        setCodeError('');
+        return true;
+    };
+
+    const validateName = (name: string) => {
+        if (!name.trim()) {
+            setNameError('Введите имя');
+            return false;
+        }
+        setNameError('');
+        return true;
+    };
+
+    const validateSurname = (surname: string) => {
+        if (!surname.trim()) {
+            setSurnameError('Введите фамилию');
+            return false;
+        }
+        setSurnameError('');
+        return true;
+    };
 
     const handleSendCode = async () => {
+        clearAllErrors();
+        const cleanedPhone = phone.slice(3).replace(/\D/g, '');
+        if (!validatePhone(cleanedPhone)) return;
+
         try {
-            await sendCode(phone);
+            const phoneToSend = '7' + cleanedPhone;
+            await sendCode(phoneToSend);
             setCodeSent(true);
         } catch (err) {
             console.error(err);
@@ -32,8 +191,13 @@ export default function RegPage() {
     };
 
     const handleLogin = async () => {
+        clearAllErrors();
+        if (!validateCode(code)) return;
+
         try {
-            await loginUser(phone, code);
+            const cleanedPhone = phone.slice(3).replace(/\D/g, '');
+            const phoneToSend = '7' + cleanedPhone;
+            await loginUser(phoneToSend, code);
             navigate('/profile');
         } catch (err) {
             console.error(err);
@@ -41,8 +205,13 @@ export default function RegPage() {
     };
 
     const handleRegister = async () => {
+        clearAllErrors();
+        if (!validateCode(code) || !validateName(name) || !validateSurname(surname)) return;
+
         try {
-            await registerUser(phone, code, name, surname);
+            const cleanedPhone = phone.slice(3).replace(/\D/g, '');
+            const phoneToSend = '7' + cleanedPhone;
+            await registerUser(phoneToSend, code, name.trim(), surname.trim());
             navigate('/profile');
         } catch (err) {
             console.error(err);
@@ -50,6 +219,9 @@ export default function RegPage() {
     };
 
     const handleEmployeeLogin = async () => {
+        clearAllErrors();
+        if (!login || !password) return;
+
         try {
             await loginEmployee(login, password);
             navigate('/employee/orders');
@@ -58,83 +230,119 @@ export default function RegPage() {
         }
     };
 
+    const switchMode = (newMode: 'login' | 'register' | 'employee') => {
+        clearAllErrors();
+        setPhone('+7 ');
+        setCode('');
+        setName('');
+        setSurname('');
+        setCodeSent(false);
+        setMode(newMode);
+
+        // Для режима сотрудникадефолтные значения
+        if (newMode === 'employee') {
+            setLogin('');
+            setPassword('');
+        }
+    };
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold text-center mb-6">
+        <div className={textStylesReg.pageContainer}>
+            <div className={textStylesReg.formContainer}>
+                <h1 className={textStylesReg.title}>
                     {mode === 'employee' ? 'Вход для сотрудников' :
                         mode === 'register' ? 'Регистрация' : 'Вход в систему'}
                 </h1>
 
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        {error}
+                {(localError || phoneError || codeError || nameError || surnameError) && (
+                    <div className={textStylesReg.errorContainer}>
+                        {localError || phoneError || codeError || nameError || surnameError}
                     </div>
                 )}
 
                 {mode === 'employee' ? (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Логин</label>
+                            <label className={textStylesReg.inputLabel}>Логин</label>
                             <input
                                 type="text"
-                                className="w-full p-2 border rounded"
+                                className={textStylesReg.inputField}
                                 value={login}
-                                onChange={(e) => setLogin(e.target.value)}
+                                onChange={(e) => {
+                                    clearAllErrors();
+                                    setLogin(e.target.value);
+                                }}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+                            <label className={textStylesReg.inputLabel}>Пароль</label>
                             <input
                                 type="password"
-                                className="w-full p-2 border rounded"
+                                className={textStylesReg.inputField}
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {
+                                    clearAllErrors();
+                                    setPassword(e.target.value);
+                                }}
                             />
                         </div>
                         <button
                             onClick={handleEmployeeLogin}
                             disabled={isLoading}
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                            className={textStylesReg.primaryButton}
                         >
                             {isLoading ? 'Вход...' : 'Войти как сотрудник'}
                         </button>
                     </div>
                 ) : codeSent ? (
                     <div className="space-y-4">
-                        <p className="text-sm text-gray-600">
+                        <p className={textStylesReg.codeSentMessage}>
                             Код отправлен на номер {phone}
                         </p>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Код подтверждения</label>
+                            <label className={textStylesReg.inputLabel}>Код подтверждения</label>
                             <input
                                 type="text"
-                                className="w-full p-2 border rounded"
+                                inputMode="numeric"
+                                className={`${textStylesReg.inputField} ${codeError ? textStylesReg.inputError : ''}`}
                                 value={code}
-                                onChange={(e) => setCode(e.target.value)}
-                                placeholder="Введите код из SMS"
+                                onChange={(e) => {
+                                    clearAllErrors();
+                                    setCode(e.target.value.replace(/\D/g, '').slice(0, 6));
+                                    validateCode(e.target.value);
+                                }}
+                                placeholder="Введите 6 цифр"
+                                maxLength={6}
                             />
                         </div>
 
                         {mode === 'register' && (
                             <>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                                    <label className={textStylesReg.inputLabel}>Имя</label>
                                     <input
                                         type="text"
-                                        className="w-full p-2 border rounded"
+                                        className={`${textStylesReg.inputField} ${nameError ? textStylesReg.inputError : ''}`}
                                         value={name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => {
+                                            clearAllErrors();
+                                            setName(e.target.value);
+                                            validateName(e.target.value);
+                                        }}
                                         placeholder="Введите ваше имя"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Фамилия</label>
+                                    <label className={textStylesReg.inputLabel}>Фамилия</label>
                                     <input
                                         type="text"
-                                        className="w-full p-2 border rounded"
+                                        className={`${textStylesReg.inputField} ${surnameError ? textStylesReg.inputError : ''}`}
                                         value={surname}
-                                        onChange={(e) => setSurname(e.target.value)}
+                                        onChange={(e) => {
+                                            clearAllErrors();
+                                            setSurname(e.target.value);
+                                            validateSurname(e.target.value);
+                                        }}
                                         placeholder="Введите вашу фамилию"
                                     />
                                 </div>
@@ -144,14 +352,18 @@ export default function RegPage() {
                         <button
                             onClick={mode === 'register' ? handleRegister : handleLogin}
                             disabled={isLoading}
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                            className={textStylesReg.primaryButton}
                         >
                             {isLoading ? 'Проверка...' : mode === 'register' ? 'Зарегистрироваться' : 'Войти'}
                         </button>
 
                         <button
-                            onClick={() => setCodeSent(false)}
-                            className="w-full text-blue-600 hover:text-blue-800 text-sm"
+                            onClick={() => {
+                                clearAllErrors();
+                                setCode('');
+                                setCodeSent(false);
+                            }}
+                            className={textStylesReg.secondaryButton}
                         >
                             Изменить номер телефона
                         </button>
@@ -159,50 +371,43 @@ export default function RegPage() {
                 ) : (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Номер телефона</label>
+                            <label className={textStylesReg.inputLabel}>Номер телефона</label>
                             <input
                                 type="tel"
-                                className="w-full p-2 border rounded"
+                                className={`${textStylesReg.inputField} ${phoneError ? textStylesReg.inputError : ''}`}
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                placeholder="+7 (999) 999-99-99"
+                                onChange={handlePhoneChange}
+                                onKeyDown={handlePhoneKeyDown}
+                                placeholder="+7 (___) ___-__-__"
+                                maxLength={18}
                             />
                         </div>
                         <button
                             onClick={handleSendCode}
-                            disabled={isLoading}
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                            disabled={isLoading || phone.length < 18}
+                            className={textStylesReg.primaryButton}
                         >
                             {isLoading ? 'Отправка...' : 'Получить код'}
                         </button>
                     </div>
                 )}
 
-                <div className="flex justify-center space-x-4 mt-6">
+                <div className={textStylesReg.modeSwitchContainer}>
                     <button
-                        onClick={() => {
-                            setMode('login');
-                            setCodeSent(false);
-                        }}
-                        className={`text-sm ${mode === 'login' ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                        onClick={() => switchMode('login')}
+                        className={textStylesReg.modeButton(mode === 'login')}
                     >
                         Вход
                     </button>
                     <button
-                        onClick={() => {
-                            setMode('register');
-                            setCodeSent(false);
-                        }}
-                        className={`text-sm ${mode === 'register' ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                        onClick={() => switchMode('register')}
+                        className={textStylesReg.modeButton(mode === 'register')}
                     >
                         Регистрация
                     </button>
                     <button
-                        onClick={() => {
-                            setMode('employee');
-                            setCodeSent(false);
-                        }}
-                        className={`text-sm ${mode === 'employee' ? 'text-blue-600 font-bold' : 'text-gray-600 hover:text-blue-600'}`}
+                        onClick={() => switchMode('employee')}
+                        className={textStylesReg.modeButton(mode === 'employee')}
                     >
                         Сотрудник
                     </button>
