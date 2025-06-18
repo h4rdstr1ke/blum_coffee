@@ -10,7 +10,6 @@ import OrderCommentSection from "../module/cartpage/OrderCommentSection";
 import CartItemsSection from "../module/cartpage/CartItemsSection";
 import Footer from "../module/footer/footer";
 
-
 const API_BASE_URL = "http://193.23.219.155:4747/api/v1";
 
 export default function CartPage() {
@@ -57,14 +56,21 @@ export default function CartPage() {
         try {
             // Форматируем дату правильно
             let completionDateTime;
+            const now = new Date();
+
             if (deliveryOption.time === 'asap') {
-                completionDateTime = new Date().toISOString();
+                // Для "как можно скорее" используем текущее время
+                completionDateTime = now.toISOString().replace('T', ' ').slice(0, 16);
             } else {
-                // Получаем выбранную дату и время
+                // Для выбранного времени используем текущую дату + выбранное время
                 const [hours, minutes] = deliveryOption.customTime.split(':');
-                const completionDate = new Date();
-                completionDate.setHours(parseInt(hours));
-                completionDate.setMinutes(parseInt(minutes));
+                const completionDate = new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    now.getDate(),
+                    parseInt(hours),
+                    parseInt(minutes)
+                );
 
                 // Форматируем в нужный формат "Y-m-d H:i"
                 const year = completionDate.getFullYear();

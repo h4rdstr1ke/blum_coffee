@@ -58,6 +58,7 @@ export default function Header({ }: Props) {
 
           <Link to="/cart" className={textStylesHeader.navLink}>ДОСТАВКА</Link>
           <Link to="/shop" className={textStylesHeader.navLink}>МЕНЮ</Link>
+          <Link to="/employee/orders" className={textStylesHeader.navLink}>Заказы</Link>
           <a className={textStylesHeader.navLink} href="#contacts">КОНТАКТЫ</a>
 
           <Link to="/profile">

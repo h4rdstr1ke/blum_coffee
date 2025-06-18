@@ -52,7 +52,7 @@ export default function RegPage() {
     const handleEmployeeLogin = async () => {
         try {
             await loginEmployee(login, password);
-            navigate('/admin');
+            navigate('/employee/orders');
         } catch (err) {
             console.error(err);
         }
