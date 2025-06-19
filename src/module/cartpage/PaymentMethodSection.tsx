@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { cartStyles } from '../../style/textStyles';
 
 export default function PaymentMethodSection({ deliveryOption }: any) {

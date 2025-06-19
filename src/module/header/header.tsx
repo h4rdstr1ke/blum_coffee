@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { textStylesHeader } from '../../style/textStyles';
 import { textStylesHeaderModal } from '../../style/textStyles';
 import { useUser } from '../../context/UserContext';
-import { text } from 'framer-motion/client';
 
 type Props = {}
 

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import CategorySection from "./CategorySection";
 import { textStylesShop } from "../../../style/textStyles";
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 
 interface Category {
     id: number;

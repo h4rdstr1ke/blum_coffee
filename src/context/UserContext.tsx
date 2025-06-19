@@ -1,16 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-interface Product {
-    id: number;
-    title: string;
-    price: number;
-    src: string;
-}
-
-interface CartItem extends Product {
-    quantity: number;
-}
-
 interface ProfileData {
     name: string;
     surname: string;

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 type Props = {}
 
 export default function About({ }: Props) {
