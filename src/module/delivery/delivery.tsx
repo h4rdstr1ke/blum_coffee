@@ -6,48 +6,79 @@ export default function Delivery() {
       <div className={textStylesDelivery.innerContainer}>
         {/* Левый блок - сервисы доставки */}
         <div className={textStylesDelivery.deliveryContainer}>
-          {/* Yandex (мобильная версия) */}
-          <div className={textStylesDelivery.mobileServiceContainer}>
-            <img
-              src="/image/yandex_mobile.svg"
-              alt="Yandex Eats"
-              className={textStylesDelivery.mobileServiceImage}
-            />
+          {/* Мобильная версия - горизонтальное расположение */}
+          <div className="md:hidden flex flex-col items-start w-full pl-4 pr-4">
+            {/* Яндекс Еда - смещен влево */}
+            <div className="self-start ml-[-10px] mb-4">
+              <a
+                href="https://eda.yandex.ru/ekaterinburg/r/fluffy_fluffy?ysclid=m24p9it2bk601069110"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-[250px]"
+              >
+                <img
+                  src="/image/yandex_mobile.svg"
+                  alt="Yandex Eats"
+                  className="w-full h-auto"
+                />
+              </a>
+            </div>
+
+            {/* Маркет Деливери - смещен вправо */}
+            <div className="self-end mr-[-10px]">
+              <a
+                href="https://market-delivery.yandex.ru/moscow/r/fluffy_fluffy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-[250px]"
+              >
+                <img
+                  src="/image/delivery_mobile.svg"
+                  alt="Market Delivery"
+                  className="w-full h-auto"
+                />
+              </a>
+            </div>
           </div>
 
-          {/* Delivery (мобильная версия) */}
-          <div className={`${textStylesDelivery.mobileServiceContainer} justify-end pr-2`}>
-            <img
-              src="/image/delivery_mobile.svg"
-              alt="Delivery Club"
-              className={textStylesDelivery.mobileServiceImage}
-            />
+          {/* Десктопная версия */}
+          <div className="hidden md:flex md:flex-col md:items-center">
+            <a
+              href="https://eda.yandex.ru/ekaterinburg/r/fluffy_fluffy?ysclid=m24p9it2bk601069110"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="md:order-2 mb-4"
+            >
+              <img
+                src="/image/yandex.svg"
+                alt="Yandex Eats"
+                className={textStylesDelivery.desktopServiceImage}
+              />
+            </a>
+            <a
+              href="https://market-delivery.yandex.ru/moscow/r/fluffy_fluffy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="md:order-1"
+            >
+              <img
+                src="/image/delivery.svg"
+                alt="Market Delivery"
+                className={textStylesDelivery.desktopServiceImage}
+              />
+            </a>
           </div>
-
-          {/* Десктопные версии */}
-          <img
-            src="/image/yandex.svg"
-            alt="Yandex Eats"
-            className={`${textStylesDelivery.desktopServiceImage} md:order-2`}
-          />
-          <img
-            src="/image/delivery.svg"
-            alt="Delivery Club"
-            className={`${textStylesDelivery.desktopServiceImage} md:order-1`}
-          />
         </div>
 
         {/* Правый блок - вкус и текст */}
         <div className={textStylesDelivery.textContainer}>
-          {/* Текст (мобильная версия) */}
+
           <div className={textStylesDelivery.mobileText}>
             <p className={textStylesDelivery.mobileTextContent}>
               Заказывай тот самый вкус<br />
               в привычных приложениях!
             </p>
           </div>
-
-          {/* Taste (мобильная версия) */}
           <div className={textStylesDelivery.mobileTasteImage}>
             <img
               src="/image/taste_mobile.svg"
@@ -55,8 +86,6 @@ export default function Delivery() {
               className="w-full"
             />
           </div>
-
-          {/* Десктопные версии */}
           <img
             src="/image/taste.svg"
             alt="Вкусные блюда"

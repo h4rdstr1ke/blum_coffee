@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { JSX, lazy, Suspense } from 'react';
 import { CartProvider } from './context/CartContext';
 import { UserProvider } from './context/UserContext';
+import ScrollToTop from './module/scrolltotop/ScrollToTop';
 import './style/index.css';
 import '../public/fonts/FormaDJRCyrillic_Web/fonts.css';
 
@@ -29,6 +30,7 @@ function App() {
       <CartProvider>
         <UserProvider>
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Загрузка...</div>}>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/shop" element={<ShopPage />} />

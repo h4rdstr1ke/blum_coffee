@@ -163,7 +163,7 @@ export default function History() {
           <div className="flex justify-end mt-4">
             <button
               onClick={() => handleRepeatOrder(order.products)}
-              className={`${textStylesHistory.buttonPrimary} bg-white rounded-xl w-full md:w-[370px] h-14 md:h-[70px] hover:bg-gray-100 transition-colors`}
+              className={`${textStylesHistory.buttonPrimary} bg-[#7EDAFF] rounded-xl w-full md:w-[370px] h-10 md:h-[70px] hover:bg-gray-100 transition-colors`}
             >
               Повторить заказ
             </button>

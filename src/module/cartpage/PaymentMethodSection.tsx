@@ -8,9 +8,9 @@ export default function PaymentMethodSection({ deliveryOption }: any) {
                 {/* Вариант "При получении" - полностью неактивный */}
                 <div
                     className={`${cartStyles.paymentOptionBase} ${deliveryOption.payment === 'cash'
-                            ? cartStyles.paymentOptionActive
-                            : cartStyles.paymentOptionInactive
-                        } opacity-80 cursor-default`}  // cursor-default вместо not-allowed
+                        ? cartStyles.paymentOptionActive
+                        : cartStyles.paymentOptionInactive
+                        } opacity-80 cursor-default`}
                 >
                     <span className="block w-full text-center text-white">
                         При получении
@@ -20,9 +20,9 @@ export default function PaymentMethodSection({ deliveryOption }: any) {
                 {/* Вариант "Картой онлайн" - полностью неактивный */}
                 <div
                     className={`${cartStyles.paymentOptionBase} ${deliveryOption.payment === 'card'
-                            ? cartStyles.paymentOptionActive
-                            : cartStyles.paymentOptionInactive
-                        } opacity-80 cursor-default`}  // cursor-default вместо not-allowed
+                        ? cartStyles.paymentOptionActive
+                        : cartStyles.paymentOptionInactive
+                        } opacity-80 cursor-default`}
                 >
                     <span className="block w-full text-center text-white">
                         Картой онлайн

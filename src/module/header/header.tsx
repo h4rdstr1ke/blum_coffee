@@ -5,6 +5,7 @@ import { textStylesHeader } from '../../style/textStyles';
 import { textStylesHeaderModal } from '../../style/textStyles';
 import { useUser } from '../../context/UserContext';
 
+
 type Props = {}
 
 export default function Header({ }: Props) {
@@ -89,11 +90,23 @@ export default function Header({ }: Props) {
             <Link to="/cart" className={textStylesHeader.navLink}>ДОСТАВКА</Link>
           )}
           <Link to="/shop" className={textStylesHeader.navLink}>МЕНЮ</Link>
-          <Link
-            to="footer"
+          <a
+            href="#contacts"
             className={textStylesHeader.navLink}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleMenu();
+
+              const contactsElement = document.getElementById('contacts');
+              if (contactsElement) {
+                contactsElement.scrollIntoView({
+                  behavior: 'smooth'
+                });
+              }
+            }}
           >
-            КОНТАКТЫ </Link>
+            КОНТАКТЫ
+          </a>
 
           <div className="flex flex-col items-center gap-1">
             {isEmployee ? (
@@ -197,6 +210,12 @@ export default function Header({ }: Props) {
               </svg>
             </button>
 
+            <Link to="/shop"
+              className={textStylesHeader.mobileMenuItem}
+              onClick={toggleMenu}>
+              МЕНЮ
+            </Link>
+
             {isEmployee ? (
               <Link to="/employee/orders" className={textStylesHeader.mobileMenuItem}
                 onClick={toggleMenu}>
@@ -209,34 +228,31 @@ export default function Header({ }: Props) {
                 ДОСТАВКА
               </Link>
             )}
-            <Link
-              to="/shop"
-              className={textStylesHeader.mobileMenuItem}
-              onClick={toggleMenu}
-            >
-              ДОСТАВКА
-            </Link>
-            <Link
-              to="/shop"
-              className={textStylesHeader.mobileMenuItem}
-              onClick={toggleMenu}
-            >
-              МЕНЮ
-            </Link>
+
             <a
               href="#contacts"
               className={textStylesHeader.mobileMenuItem}
-              onClick={toggleMenu}
+              onClick={(e) => {
+                e.preventDefault();
+                toggleMenu();
+
+                const contactsElement = document.getElementById('contacts');
+                if (contactsElement) {
+                  contactsElement.scrollIntoView({
+                    behavior: 'smooth'
+                  });
+                }
+              }}
             >
               КОНТАКТЫ
             </a>
-            <Link
+            {isEmployee ? ('') : (<Link
               to="/profile"
               className={textStylesHeader.mobileMenuItem}
               onClick={toggleMenu}
             >
               ПРОФИЛЬ
-            </Link>
+            </Link>)}
             {isAuthenticated && (
               <button
                 onClick={handleLogoutClick}

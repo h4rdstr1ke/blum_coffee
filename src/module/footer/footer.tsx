@@ -8,7 +8,7 @@ const scrollToTop = () => {
 };
 export default function Footer() {
   return (
-    <footer className="w-full px-4 md:px-0 py-8 md:py-12 bg-white mt-35">
+    <footer id="contacts" className="w-full px-4 md:px-0 py-8 md:py-12 bg-white mt-10 md:mt-35">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Логотип и соцсети */}
         <div className="flex flex-col items-center md:items-start">
@@ -32,8 +32,8 @@ export default function Footer() {
 
         {/* Часы работы */}
         <div className="flex flex-col items-center md:items-start">
-          <p className={`${textStylesFooter.footerText} mb-2 md:mb-4`}>Ждём вас у нас</p>
-          <p className={textStylesFooter.footerText}>с 10 до 22</p>
+          <p className={`${textStylesFooter.footerText}`}>Ждём вас у нас</p>
+          <p className={textStylesFooter.footerText}>c 10:00 до 22:00</p>
         </div>
 
         {/* Основные ссылки */}
@@ -48,6 +48,7 @@ export default function Footer() {
           <Link
             to="/shop"
             className={textStylesFooter.footerLink}
+            onClick={scrollToTop}
           >
             Меню
           </Link>
@@ -55,6 +56,7 @@ export default function Footer() {
           <Link
             to="/cart"
             className={textStylesFooter.footerLink}
+            onClick={scrollToTop}
           >
             Доставка
           </Link>
@@ -64,7 +66,7 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start gap-2 md:gap-4">
           <a href="https://fluffyfluffy.ru/" target='blank_' className={textStylesFooter.footerLink}>Сайт франшизы</a>
           <a href="tel:89052313855" className={textStylesFooter.footerLink}>8 (905) 231 38 55</a>
-          <a className={textStylesFooter.footerLink}>Разработчики Bloom</a>
+          <p className={`${textStylesFooter.footerLink} caret-transparent`}>Разработчики блум</p>
         </div>
       </div>
     </footer>

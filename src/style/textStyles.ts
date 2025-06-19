@@ -13,7 +13,7 @@ export const textStylesHistory = {
   itemPrice: "text-xl md:text-3xl font-bold tracking-wider",
 
   // Кнопки
-  buttonPrimary: "tracking-widest text-lg md:text-2xl font-bold text-[#39C6FF]",
+  buttonPrimary: "tracking-widest text-lg md:text-2xl font-bold text-white",
 
   // Основной текст
   body: "forma-textRegular md:text-lg",
@@ -25,10 +25,11 @@ export const textStylesGuest = {
 
   // Поля ввода
   input: `
-    w-full p-3 border rounded-lg
-    focus:outline-none focus:ring-2 focus:ring-blue-500
+    forma-TextBold w-full p-1 border-none rounded-[24px] caret-transparent 
+    focus:outline-none focus:ring-2 focus:border-none focus:ring-[#7EDAFF]
+    bg-[#C9CCCD] text-center
     disabled:bg-gray-100 disabled:cursor-default
-    text-gray-800 font-medium text-base /* Добавляем стили текста */
+    forma-TextMedium tracking-wide text-[#FFFFFF] text-base text-[24px]
   `,
 
   /* Кнопки
@@ -49,7 +50,7 @@ export const textStylesGuest = {
 export const textStylesShop = {
   // Заголовки секций
   sectionTitle: "forma-textRegular text-center text-[#7EDAFF] text-2xl md:text-[43px] font-bold",
-  sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-3xl md:text-[35px] font-bold mb-6 bg-[#7EDAFFDB] rounded-[50px] mx-auto max-w-[1200px] px-4 pb-4 pt-4",
+  sectionDescription: "forma-textMedium tracking-wide leading-normal text-center text-white text-[25px] md:text-[35px] font-bold mb-6 bg-[#7EDAFFDB] rounded-[50px] mx-auto max-w-[1200px] px-4 pb-4 pt-4",
 
   // Кнопки
   infoButton: "text-gray font-bold text-sm",
@@ -70,9 +71,9 @@ export const textStylesShop = {
     image: "w-full h-full object-cover",
     infoButton: "absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center z-10 bg-white border border-gray-300 rounded-full shadow-sm",
     infoIcon: "w-5 h-5",
-    title: "forma-textMedium text-[#FFFFFF] text-bold md:text-[28px]  mb-1 md:mb-2",
-    price: "forma-textMedium text-[#FFFFFF] md:text-[28px] absolute -top-5 md:-top-12 right-4 md:right-0 text-lg font-bold",
-    addButton: "forma-textMedium text-[#FFFFFF] bg-[#39C6FF] md:text-[24px] px-5 md:px-6 rounded-lg md:rounded-xl flex "
+    title: "forma-textMedium text-[#FFFFFF] text-bold text-[28px] md:text-[28px]  mb-1 md:mb-2",
+    price: "forma-textMedium text-[#FFFFFF] text-[28px] md:text-[28px] absolute -top-12 md:-top-12 right-4 md:right-0 text-lg font-bold",
+    addButton: "forma-textMedium text-[#FFFFFF] bg-[#39C6FF] text-[24px] md:text-[24px] px-5 md:px-6 rounded-lg md:rounded-xl flex "
   },
 
   // Стили для ProductInfoModal
@@ -135,7 +136,7 @@ export const textStylesHeader = {
   navContainer: "w-full flex items-center justify-between ml-[5%]",
   scheduleContainer: "text-right",
   scheduleTitle: "forma-textRegular tracking-widest text-[clamp(14px,2vw,20px)]",
-  scheduleTime: "forma-textRegular text-[clamp(12px,1.8vw,18px)] text-center",
+  scheduleTime: "forma-textRegular text-[clamp(12px,1.8vw,20px)] text-center",
   navLink: `
     forma-textBold
     tracking-wider 
@@ -163,7 +164,7 @@ export const textStylesHeader = {
   // Мобильная версия
   mobileContainer: "flex md:hidden w-full p-4 items-center justify-between",
   mobileLogo: "h-10",
-  mobileSchedule: "text-[clamp(11px,3vw,14px)] uppercase tracking-wider text-center mx-4",
+  mobileSchedule: "forma-textBold text-[clamp(11px,3vw,14px)] uppercase tracking-wider text-center mx-4",
   menuButton: "p-2 focus:outline-none flex flex-col items-center justify-center z-50",
   menuLine: "w-6 h-0.5 bg-white mb-1.5 last:mb-0 transition-all duration-300",
 
@@ -244,7 +245,6 @@ export const textStylesWelcome = {
 
   mobileTitleAccent: `
     text-5xl
-    text-[#7EDAFF]
     forma-textBold
   `,
 
@@ -308,9 +308,9 @@ export const textStylesDelivery = {
 
   // Правый блок (текст и изображение)
   textContainer: "flex flex-col items-center w-full md:w-auto",
-  mobileText: "md:hidden text-center my-4 w-full",
-  mobileTextContent: "text-[#7EDAFF] font-bold text-3xl leading-tight forma-textBold",
-  desktopText: "hidden md:block text-center mt-4",
+  mobileText: "md:hidden text-center my-10 w-full",
+  mobileTextContent: "text-[#7EDAFF] font-bold text-[30px] leading-tight forma-textBold",
+  desktopText: "hidden md:block text-center mt-4 tracking-wider",
   desktopTextContent: "text-[#FD744C] font-bold text-[60px] leading-tight forma-textBold",
 
   // Изображения вкуса
@@ -331,7 +331,7 @@ export const cartStyles = {
   userInfoContainer: "bg-white p-6 rounded-lg shadow",
   sectionTitle: " text-[#39C6FF] text-[40px] font-bold mb-4",
   userInfoGrid: "grid grid-cols-1 md:grid-cols-1 gap-4",
-  inputField: "forma-textBold tracking-wider w-full max-w-[300px] text-center text-white border rounded-[20px] bg-[#C9CCCD] text-[24px] pointer-events-none",
+  inputField: "forma-textBold tracking-wider w-full max-w-[300px] text-center text-white border rounded-[20px] bg-[#C9CCCD] text-[24px] pointer-events-none bg-[#C9CCCD]",
 
   // DeliveryTimeSection
 

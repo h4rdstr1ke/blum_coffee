@@ -3,6 +3,7 @@ import Guest from "../module/profile/guest";
 import History from "../module/profile/history";
 import { useUser } from '../context/UserContext';
 import { useEffect, useState } from 'react';
+import Footer from "../module/footer/footer";
 
 export default function Profile() {
   const { userData } = useUser();
@@ -21,7 +22,7 @@ export default function Profile() {
         <Guest />
         {!loading && <History />}
       </div>
-
+      <Footer />
     </div>
   );
 }

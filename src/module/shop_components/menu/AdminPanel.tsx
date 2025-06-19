@@ -761,10 +761,10 @@ export default function AdminPanel() {
                                 unit: e.target.value
                             })}
                             className={textStylesPanel.input}
-                            placeholder="Единица измерения"
+                            placeholder="Укажите название ингридиента"
                         />
 
-                        <input
+                        {/* <input
                             type="number"
                             value={productIngredient.quantity}
                             onChange={(e) => setProductIngredient({
@@ -775,7 +775,7 @@ export default function AdminPanel() {
                             placeholder="Количество"
                             min="0.1"
                             step="0.1"
-                        />
+                        />*/}
 
                         <button
                             onClick={addIngredientToProduct}

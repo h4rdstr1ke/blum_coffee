@@ -118,7 +118,7 @@ export default function Location({ }: Props) {
                 }}
               />
 
-              <h2 className="text-2xl font-bold leading-snug text-white mx-[60px] text-center">
+              <h2 className="forma-textBold text-2xl text-white mx-[60px] text-center">
                 Удобное расположение в центре Екатеринбурга в вашем любимом торговом центре Гринвич!
               </h2>
 
@@ -128,7 +128,7 @@ export default function Location({ }: Props) {
                 className="absolute right-0 z-20"
                 style={{
                   height: `${mobileDecorSize}px`,
-                  transform: 'translateX(40%) rotate(-5deg)'
+                  transform: 'translateX(45%) rotate(-5deg)'
                 }}
               />
             </div>
@@ -141,7 +141,7 @@ export default function Location({ }: Props) {
 
         {/* Адрес */}
         <div className={`w-full ${sectionSpacing}`}>
-          <p className={`text-xl md:text-[32px] lg:text-[40px] text-center mb-6 md:mb-12 font-medium ${isMobile ? 'text-[#7EDAFF]' : 'text-[#FD744C]'
+          <p className={`forma-textBold text-xl md:text-[32px] lg:text-[40px] text-center mb-2 md:mb-12 mt-10 ${isMobile ? 'text-[#7EDAFF]' : 'text-[#FD744C]'
             }`}>
             ул. 8 марта, 46; 3 этаж; фуд-маркет Estory
           </p>

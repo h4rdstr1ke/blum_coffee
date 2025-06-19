@@ -17,9 +17,9 @@ export default function Guest() {
   }
 
   return (
-    <div className='w-full px-4 mx-auto mt-10'>
+    <div className='w-full px-4 mx-auto mt-10 md:mt-20 '>
       <h1 className={textStylesGuest.title}>Профиль</h1>
-      <div className='w-full px-4 mx-auto max-w-4xl'>
+      <div className='w-full px-4 mx-auto mt-10 md:mt-20 max-w-4xl '>
         <div className={textStylesGuest.label}>
           <div className='flex flex-col md:flex-row md:flex-wrap gap-6 md:gap-8'>
             <div className='flex flex-col md:flex-row gap-6 md:gap-8 w-full'>

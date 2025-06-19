@@ -3,11 +3,11 @@ export default function Welcome() {
   return (
     <div className="relative w-full overflow-hidden" style={{ height: 'calc(100dvh - 5rem)' }}>
       {/* Круги на фоне */}
-      <div className="welcome-bg-circle left z-0"></div>
+      <div className="welcome-bg-circle left z-0 "></div>
       <div className="welcome-bg-circle right z-0"></div>
 
       {/* Мобильная версия */}
-      <div className="md:hidden flex flex-col items-center justify-center h-full relative z-10">
+      <div className="md:hidden flex flex-col items-center justify-center gap-10 px-2 h-full relative z-10">
         <h1 className={`${textStylesWelcome.mobileTitle}`}>
           Добро пожаловать в <span className={`${textStylesWelcome.mobileTitleAccent}`}>Fluffy!</span>
         </h1>
