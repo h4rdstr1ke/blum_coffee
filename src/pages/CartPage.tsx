@@ -130,7 +130,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="">
+        <div className="space-y-10">
             <Header />
 
             {/* Временная ссылка для сотрудника */}
@@ -145,7 +145,7 @@ export default function CartPage() {
                 </div>
             )}
 
-            <h1 className="text-3xl text-[#39C6FF] font-bold mb-6 mt-4 md:ml-20">Оформление заказа</h1>
+            <h1 className="text-4xl text-[#39C6FF] font-bold mb-6 ml-5 mt-4 md:ml-20">Оформление заказа</h1>
 
             {orderError && (
                 <div className="max-w-[1440px] mx-auto px-4">
@@ -158,7 +158,7 @@ export default function CartPage() {
             <div className="max-w-[1440px] mx-auto">
                 <div className="">
                     {userData && <UserInfoSection userData={userData} />}
-                    <p className='text-center text-[#39C6FF] text-[34px] mb-6'>
+                    <p className='text-center text-[#39C6FF] text-[34px] mt-15 mb-6'>
                         Самовывоз: ул. 8 марта, 46 (ТРК Гринвич) 3 этаж
                     </p>
                     <OrderCommentSection

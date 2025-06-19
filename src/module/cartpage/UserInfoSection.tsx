@@ -21,14 +21,14 @@ export default function UserInfoSection({ userData }: any) {
                         className={cartStyles.inputField}
                     />
                 </div>
-                <div>
+                {/*<div>
                     <input
                         type="email"
                         value={userData.email}
                         readOnly
                         className={cartStyles.inputField}
                     />
-                </div>
+                </div>*/}
                 <div>
                     <input
                         type="tel"

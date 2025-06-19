@@ -415,8 +415,8 @@ export const cartStyles = {
     `,
 
   // CartItemsSection
-  cartContainer: "bg-white p-6 rounded-lg shadow border",
-  cartItem: "p-4 px-8 bg-[#7EDAFFDB] bg-opacity-[90%] rounded-[24px] relative border",
+  cartContainer: "bg-white p-6 rounded-lg shadow mt-10",
+  cartItem: "p-4 px-8 bg-[#7EDAFFDB] bg-opacity-[90%] rounded-[24px] relative ",
   itemContainer: "flex items-start gap-4",
   itemImage: "w-45 h-40 object-cover rounded-lg",
   itemTitle: "forma-textBold text-[30px] font-bold text-[#FFFFFF]",
@@ -426,7 +426,7 @@ export const cartStyles = {
   itemPrice: "text-lg font-bold text-[#FFFFFF]",
   removeButton: "absolute top-3 right-3 text-gray-400 hover:text-red-500",
   totalContainer: "flex text-[#39C6FF] justify-end font-bold text-lg mt-6 pt-4 border-t border-gray-200",
-  submitButton: "forma-textBold tracking-wider text-center w-full max-w-[300px] rounded-lg font-bold text-[24px]",
+  submitButton: "forma-textBold tracking-wider text-center w-full max-w-[300px] rounded-[30px] font-bold text-[24px]",
   activeButton: "bg-[#39C6FF] text-white hover:bg-[#2fb0e6]",
   disabledButton: "bg-gray-300 cursor-not-allowed",
   backLink: "block text-center text-[#39C6FF] hover:underline mt-4",
@@ -556,7 +556,54 @@ export const textStylesPanel = {
   successButton: "px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors",
 
   // Карточки
-  categoryCard: "flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors",
+  categoryCard: `
+    p-4 bg-white rounded-lg border border-gray-200 
+    hover:shadow-md transition-shadow
+    flex flex-col
+  `,
+  categoryHeader: `
+    flex justify-between items-start mb-2
+  `,
+  categoryName: `
+    font-semibold text-lg text-gray-800
+  `,
+  categoryDescription: `
+    text-sm text-gray-600 mt-2 p-3 bg-gray-50 rounded
+    transition-all duration-200 cursor-pointer
+    hover:bg-gray-100
+  `,
+  categoryDescriptionCollapsed: `
+    max-h-20 overflow-hidden
+  `,
+  categoryDescriptionExpanded: `
+    max-h-none
+  `,
+  editDescriptionInput: `
+    w-full p-2 border border-gray-300 rounded
+    focus:ring-2 focus:ring-[#39C6FF] focus:border-transparent
+  `,
+  editButtons: `
+    flex gap-2 mt-2 justify-end
+  `,
+  saveButton: `
+    px-3 py-1 bg-green-500 text-white rounded text-sm
+    hover:bg-green-600
+  `,
+  cancelButton: `
+    px-3 py-1 bg-gray-500 text-white rounded text-sm
+    hover:bg-gray-600
+  `,
+  editButton: `
+    text-blue-600 hover:text-blue-800 p-1
+    hover:bg-blue-100 rounded-full text-sm
+  `,
+  deleteButton: `
+    text-red-600 hover:text-red-800 p-1
+    hover:bg-red-100 rounded-full
+  `,
+  actionButtons: `
+    flex gap-1
+  `,
   productCard: "border rounded-lg p-4 hover:shadow-md transition-shadow bg-white",
   productTitle: "font-semibold text-lg text-gray-800",
   productPrice: "text-blue-600 font-bold",

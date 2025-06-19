@@ -6,6 +6,7 @@ import { useUser } from '../../../context/UserContext';
 interface Category {
     id: number;
     name: string;
+    description: string;
 }
 
 interface Product {
@@ -43,7 +44,10 @@ export default function AdminPanel() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
-    const [newCategory, setNewCategory] = useState({ name: '' });
+    const [newCategory, setNewCategory] = useState({
+        name: '',
+        description: ''
+    });
     const [newProduct, setNewProduct] = useState<Omit<Product, 'id'> & { id?: number }>({
         name: '',
         price: 0,
@@ -70,6 +74,9 @@ export default function AdminPanel() {
     const [productImage, setProductImage] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [expandedCategories, setExpandedCategories] = useState<Record<number, boolean>>({});
+    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [editedDescription, setEditedDescription] = useState('');
 
     useEffect(() => {
         if (isEmployee) {
@@ -84,14 +91,28 @@ export default function AdminPanel() {
 
             const headers = {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Origin': window.location.origin
             };
 
             const [categoriesRes, productsRes, ingredientsRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/category`, { headers }),
-                fetch(`${API_BASE_URL}/product`, { headers }),
-                fetch(`${API_BASE_URL}/ingredient`, { headers })
+                fetch(`${API_BASE_URL}/category`, {
+                    headers,
+                    mode: 'cors'
+                }),
+                fetch(`${API_BASE_URL}/product`, {
+                    headers,
+                    mode: 'cors'
+                }),
+                fetch(`${API_BASE_URL}/ingredient`, {
+                    headers,
+                    mode: 'cors'
+                })
             ]);
+
+            if (!categoriesRes.ok) throw new Error('Ошибка загрузки категорий');
+            if (!productsRes.ok) throw new Error('Ошибка загрузки продуктов');
+            if (!ingredientsRes.ok) throw new Error('Ошибка загрузки ингредиентов');
 
             const categoriesData = await categoriesRes.json();
             const productsData = await productsRes.json();
@@ -120,8 +141,15 @@ export default function AdminPanel() {
             }
         } catch (error) {
             console.error('Ошибка загрузки данных:', error);
-            setError('Ошибка при загрузке данных');
+            setError('Ошибка при загрузке данных. Проверьте соединение и попробуйте снова.');
         }
+    };
+
+    const toggleCategoryExpand = (categoryId: number) => {
+        setExpandedCategories(prev => ({
+            ...prev,
+            [categoryId]: !prev[categoryId]
+        }));
     };
 
     const createCategory = async () => {
@@ -138,9 +166,11 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Origin': window.location.origin
                 },
-                body: JSON.stringify(newCategory)
+                body: JSON.stringify(newCategory),
+                mode: 'cors'
             });
 
             if (!response.ok) {
@@ -149,12 +179,49 @@ export default function AdminPanel() {
 
             const data = await response.json();
             setCategories([...categories, data]);
-            setNewCategory({ name: '' });
+            setNewCategory({ name: '', description: '' });
             setSuccess(`Категория "${data.name}" создана!`);
             setTimeout(() => setSuccess(null), 3000);
         } catch (error) {
             console.error('Ошибка:', error);
             setError(error instanceof Error ? error.message : 'Ошибка создания категории');
+        }
+    };
+
+    const saveDescription = async () => {
+        if (!editingCategory) return;
+
+        try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
+
+            const response = await fetch(`${API_BASE_URL}/category/${editingCategory.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    'Origin': window.location.origin
+                },
+                body: JSON.stringify({
+                    name: editingCategory.name,
+                    description: editedDescription
+                }),
+                mode: 'cors'
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка обновления описания');
+            }
+
+            setCategories(categories.map(c =>
+                c.id === editingCategory.id ? { ...c, description: editedDescription } : c
+            ));
+            setEditingCategory(null);
+            setSuccess('Описание успешно обновлено!');
+            setTimeout(() => setSuccess(null), 3000);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            setError(error instanceof Error ? error.message : 'Ошибка обновления описания');
         }
     };
 
@@ -169,8 +236,10 @@ export default function AdminPanel() {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'Origin': window.location.origin
+                },
+                mode: 'cors'
             });
 
             if (!response.ok) {
@@ -205,9 +274,11 @@ export default function AdminPanel() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Origin': window.location.origin
                     },
-                    body: JSON.stringify({ name: newIngredient.name })
+                    body: JSON.stringify({ name: newIngredient.name }),
+                    mode: 'cors'
                 });
 
                 if (!response.ok) {
@@ -301,9 +372,11 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Origin': window.location.origin
                 },
-                body: formData
+                body: formData,
+                mode: 'cors'
             });
 
             if (!response.ok) {
@@ -339,8 +412,10 @@ export default function AdminPanel() {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'Origin': window.location.origin
+                },
+                mode: 'cors'
             });
 
             if (!response.ok) {
@@ -388,39 +463,105 @@ export default function AdminPanel() {
         <div className={textStylesPanel.container}>
             <h1 className={textStylesPanel.title}>Админ-панель меню</h1>
 
-            {/* Сообщения об ошибках и успехе */}
             {error && <div className={textStylesPanel.errorText}>{error}</div>}
             {success && <div className={textStylesPanel.successText}>{success}</div>}
 
             <section className={textStylesPanel.section}>
                 <h2 className={textStylesPanel.sectionTitle}>Управление категориями</h2>
-                <div className="flex gap-2 mb-4">
-                    <input
-                        type="text"
-                        value={newCategory.name}
-                        onChange={(e) => setNewCategory({ name: e.target.value })}
-                        className={textStylesPanel.input}
-                        placeholder="Название новой категории"
+                <div className="flex flex-col gap-4 mb-6">
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={newCategory.name}
+                            onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                            className={textStylesPanel.input}
+                            placeholder="Название категории"
+                        />
+                        <button
+                            onClick={createCategory}
+                            className={textStylesPanel.successButton}
+                        >
+                            Добавить категорию
+                        </button>
+                    </div>
+                    <textarea
+                        value={newCategory.description}
+                        onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                        className={textStylesPanel.textarea}
+                        placeholder="Описание категории"
+                        rows={3}
                     />
-                    <button
-                        onClick={createCategory}
-                        className={textStylesPanel.successButton}
-                    >
-                        Добавить категорию
-                    </button>
                 </div>
 
                 <div className={textStylesPanel.gridCols3}>
                     {categories.map(category => (
                         <div key={category.id} className={textStylesPanel.categoryCard}>
-                            <span className="font-medium">{category.name}</span>
-                            <button
-                                onClick={() => deleteCategory(category.id)}
-                                className="text-red-600 hover:text-red-800 p-1"
-                                title="Удалить категорию"
-                            >
-                                ❌
-                            </button>
+                            <div className="flex justify-between items-center">
+                                <span className="font-medium">{category.name}</span>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => {
+                                            setEditingCategory(category);
+                                            setEditedDescription(category.description);
+                                        }}
+                                        className="text-blue-600 hover:text-blue-800 p-1"
+                                        title="Редактировать описание"
+                                    >
+                                        ✏️
+                                    </button>
+                                    <button
+                                        onClick={() => toggleCategoryExpand(category.id)}
+                                        className="text-gray-600 hover:text-gray-800 p-1"
+                                        title={expandedCategories[category.id] ? "Свернуть описание" : "Развернуть описание"}
+                                    >
+                                        {expandedCategories[category.id] ? "▼" : "▶"}
+                                    </button>
+                                    <button
+                                        onClick={() => deleteCategory(category.id)}
+                                        className="text-red-600 hover:text-red-800 p-1"
+                                        title="Удалить категорию"
+                                    >
+                                        ❌
+                                    </button>
+                                </div>
+                            </div>
+
+                            {editingCategory?.id === category.id ? (
+                                <div className="mt-2">
+                                    <textarea
+                                        value={editedDescription}
+                                        onChange={(e) => setEditedDescription(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                        rows={3}
+                                    />
+                                    <div className="flex justify-end gap-2 mt-2">
+                                        <button
+                                            onClick={() => setEditingCategory(null)}
+                                            className="px-2 py-1 bg-gray-200 rounded"
+                                        >
+                                            Отмена
+                                        </button>
+                                        <button
+                                            onClick={saveDescription}
+                                            className="px-2 py-1 bg-blue-500 text-white rounded"
+                                        >
+                                            Сохранить
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                expandedCategories[category.id] && category.description && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="mt-2 p-3 bg-gray-50 rounded overflow-hidden whitespace-pre-wrap break-words"
+                                    >
+                                        {category.description}
+                                    </motion.div>
+                                )
+                            )}
                         </div>
                     ))}
                 </div>
@@ -685,7 +826,14 @@ export default function AdminPanel() {
                         return (
                             <div key={category.id} className="mb-8">
                                 <div className="flex justify-between items-center mb-3 p-3 bg-gray-100 rounded-lg">
-                                    <h3 className="text-lg font-semibold">{category.name}</h3>
+                                    <div>
+                                        <h3 className="text-lg font-semibold">{category.name}</h3>
+                                        {category.description && (
+                                            <p className="text-sm text-gray-600 rounded p-2 max-w-[200px] break-words whitespace-pre-wrap overflow-hidden">
+                                                {category.description}
+                                            </p>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={() => {
                                             setNewProduct({

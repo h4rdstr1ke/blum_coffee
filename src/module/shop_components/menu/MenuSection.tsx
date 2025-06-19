@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 interface Category {
     id: number;
     name: string;
+    description: string;
 }
 
 interface Product {
@@ -33,14 +34,6 @@ interface Product {
 }
 
 const API_BASE_URL = 'http://193.23.219.155:4747/api/v1';
-
-const categoryDescriptions: Record<number, string> = {
-    1: "Панкейки, тающие во рту — легкие, как утренний ветерок, с хрустящей корочкой и воздушные внутри.",
-    2: "Хлопковые чизкейки — настолько нежные, что они буквально исчезают на языке, оставляя сладкое сливочное послевкусие.",
-    3: "Напитки с сырной пенкой — неожиданно, волшебно, восхитительно. Это как десерт и напиток в одном глотке.",
-    4: "Моти — как маленькие облачка, которые тают во рту. Успейте попробовать все вкусы!",
-    5: "Мы экспериментируем, чтобы дарить вам новые вкусовые эмоции."
-};
 
 export default function MenuSection() {
     const [categories, setCategories] = useState<Category[]>([]);
@@ -114,7 +107,7 @@ export default function MenuSection() {
                     <CategorySection
                         key={category.id}
                         title={category.name}
-                        description={categoryDescriptions[category.id]}
+                        description={category.description}
                         items={categoryProducts.map(p => ({
                             id: p.id,
                             title: p.name,
@@ -123,7 +116,7 @@ export default function MenuSection() {
                             info: {
                                 weight: `${p.weight} г`,
                                 composition: p.ingredients.map(ing =>
-                                    `${ing.name || 'Ингредиент'} - ${ing.unit}`
+                                    `${ing.name || 'Ингредиент'} - ${ing.quantity}${ing.unit}`
                                 ),
                                 calories: p.energy_value.toString(),
                                 proteins: p.proteins.toString(),

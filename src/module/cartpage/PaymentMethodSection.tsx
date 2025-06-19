@@ -1,66 +1,39 @@
 import { motion } from 'framer-motion';
 import { cartStyles } from '../../style/textStyles';
 
-export default function PaymentMethodSection({ deliveryOption, setDeliveryOption }: any) {
+export default function PaymentMethodSection({ deliveryOption }: any) {
     return (
         <div className={cartStyles.userInfoContainer}>
             <h2 className={cartStyles.sectionTitle}>Способ оплаты</h2>
             <div className="flex flex-col gap-2 max-w-[300px]">
-                {/* Вариант "При получении" */}
-                <motion.label
+                {/* Вариант "При получении" - полностью неактивный */}
+                <div
                     className={`${cartStyles.paymentOptionBase} ${deliveryOption.payment === 'cash'
-                        ? cartStyles.paymentOptionActive
-                        : cartStyles.paymentOptionInactive
-                        }`}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                            ? cartStyles.paymentOptionActive
+                            : cartStyles.paymentOptionInactive
+                        } opacity-80 cursor-default`}  // cursor-default вместо not-allowed
                 >
-                    <input
-                        type="radio"
-                        name="payment"
-                        checked={deliveryOption.payment === 'cash'}
-                        onChange={() => setDeliveryOption({ ...deliveryOption, payment: 'cash' })}
-                        className="hidden"
-                    />
-                    <motion.span
-                        className="block w-full text-center"
-                        initial={false}
-                        animate={{
-                            color: deliveryOption.payment === 'cash' ? '#FFFFFF' : '#FFFFFF'
-                        }}
-                        transition={{ duration: 0.2 }}
-                    >
+                    <span className="block w-full text-center text-white">
                         При получении
-                    </motion.span>
-                </motion.label>
+                    </span>
+                </div>
 
-                {/* Вариант "Картой онлайн" */}
-                <motion.label
+                {/* Вариант "Картой онлайн" - полностью неактивный */}
+                <div
                     className={`${cartStyles.paymentOptionBase} ${deliveryOption.payment === 'card'
-                        ? cartStyles.paymentOptionActive
-                        : cartStyles.paymentOptionInactive
-                        }`}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                            ? cartStyles.paymentOptionActive
+                            : cartStyles.paymentOptionInactive
+                        } opacity-80 cursor-default`}  // cursor-default вместо not-allowed
                 >
-                    <input
-                        type="radio"
-                        name="payment"
-                        checked={deliveryOption.payment === 'card'}
-                        onChange={() => setDeliveryOption({ ...deliveryOption, payment: 'card' })}
-                        className="hidden"
-                    />
-                    <motion.span
-                        className="block w-full text-center"
-                        initial={false}
-                        animate={{
-                            color: deliveryOption.payment === 'card' ? '#FFFFFF' : '#FFFFFF'
-                        }}
-                        transition={{ duration: 0.2 }}
-                    >
+                    <span className="block w-full text-center text-white">
                         Картой онлайн
-                    </motion.span>
-                </motion.label>
+                    </span>
+                </div>
+
+                {/* Подпись о недоступности */}
+                <p className="text-[#39C6FF] text-center mt-2 text-sm">
+                    Выбор способа оплаты временно недоступен
+                </p>
             </div>
         </div>
     );
