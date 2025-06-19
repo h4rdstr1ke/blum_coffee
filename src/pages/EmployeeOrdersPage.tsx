@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import Header from "../module/header/header";
 import Footer from "../module/footer/footer";
-import LogoutButton from '../module/logoutButton/logoutButton';
 import { textStylesEmployeeOrders } from '../style/textStyles';
 
 const API_BASE_URL = "http://193.23.219.155:4747/api/v1";
@@ -217,9 +216,6 @@ export default function EmployeeOrdersPage() {
                     </div>
                 )}
 
-                <div className={textStylesEmployeeOrders.logoutButton}>
-                    <LogoutButton className="px-6 py-3 forma-textBold" />
-                </div>
             </div>
             <Footer />
         </div>

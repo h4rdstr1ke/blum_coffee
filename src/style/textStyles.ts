@@ -212,8 +212,24 @@ export const textStylesHeader = {
     p-2
     z-50
   `,
+  orderTitle: "text-red"
 } as const;
 
+export const textStylesHeaderModal = {
+  overlay: "fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50",
+  modalContainer: "bg-white p-6 rounded-lg max-w-sm w-full",
+  modalTitle: "text-xl font-bold text-[#39C6FF] mb-4",
+  buttonContainer: "flex justify-end space-x-3 mt-4",
+  cancelButton: `
+    px-4 py-2 text-gray-600 hover:text-gray-800 
+    transition-colors rounded-lg border border-gray-300
+    hover:bg-gray-100
+  `,
+  confirmButton: `
+    px-4 py-2 bg-red-500 text-white rounded-lg
+    hover:bg-red-600 transition-colors
+  `,
+} as const;
 
 export const textStylesWelcome = {
   // Мобильная версия

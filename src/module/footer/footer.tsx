@@ -1,5 +1,11 @@
+import { Link } from 'react-router-dom';
 import { textStylesFooter } from '../../style/textStyles';
-
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+};
 export default function Footer() {
   return (
     <footer className="w-full px-4 md:px-0 py-8 md:py-12 bg-white mt-35">
@@ -32,16 +38,33 @@ export default function Footer() {
 
         {/* Основные ссылки */}
         <div className="flex flex-col items-center md:items-start gap-2 md:gap-4">
-          <a href="#" className={textStylesFooter.footerLink}>Главная</a>
-          <a href="#" className={textStylesFooter.footerLink}>Меню</a>
-          <a href="#" className={textStylesFooter.footerLink}>Доставка</a>
+          <Link
+            to="/"
+            className={textStylesFooter.footerLink}
+            onClick={scrollToTop}
+          >
+            Главная
+          </Link>
+          <Link
+            to="/shop"
+            className={textStylesFooter.footerLink}
+          >
+            Меню
+          </Link>
+
+          <Link
+            to="/cart"
+            className={textStylesFooter.footerLink}
+          >
+            Доставка
+          </Link>
         </div>
 
         {/* Контакты */}
         <div className="flex flex-col items-center md:items-start gap-2 md:gap-4">
-          <a href="#" className={textStylesFooter.footerLink}>Сайт франшизы</a>
+          <a href="https://fluffyfluffy.ru/" target='blank_' className={textStylesFooter.footerLink}>Сайт франшизы</a>
           <a href="tel:89052313855" className={textStylesFooter.footerLink}>8 (905) 231 38 55</a>
-          <a href="#" className={textStylesFooter.footerLink}>Разработчики Bloom</a>
+          <a className={textStylesFooter.footerLink}>Разработчики Bloom</a>
         </div>
       </div>
     </footer>

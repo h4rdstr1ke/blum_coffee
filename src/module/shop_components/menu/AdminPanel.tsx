@@ -9,6 +9,19 @@ interface Category {
     description: string;
 }
 
+interface Ingredient {
+    id: number;
+    name: string;
+}
+
+interface ProductIngredient {
+    id: number;
+    ingredient_id: number;
+    name: string;
+    quantity: number;
+    unit: string;
+}
+
 interface Product {
     id?: number;
     name: string;
@@ -23,18 +36,8 @@ interface Product {
         id: number;
         name: string;
     } | null;
-    ingredients: {
-        ingredient_id: number;
-        quantity: number;
-        unit: string;
-        name?: string;
-    }[];
+    ingredients: ProductIngredient[];
     image?: string;
-}
-
-interface Ingredient {
-    id: number;
-    name: string;
 }
 
 const API_BASE_URL = 'http://193.23.219.155:4747/api/v1';
@@ -60,16 +63,17 @@ export default function AdminPanel() {
         category: null,
         ingredients: [],
     });
-    const [newIngredient, setNewIngredient] = useState<{
-        ingredient_id?: number;
-        name?: string;
+    const [productIngredient, setProductIngredient] = useState<{
+        ingredient_id: number;
         quantity: number;
         unit: string;
     }>({
-        ingredient_id: undefined,
-        name: '',
+        ingredient_id: 0,
         quantity: 1,
         unit: ''
+    });
+    const [ingredientForm, setIngredientForm] = useState({
+        name: ''
     });
     const [productImage, setProductImage] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -91,44 +95,22 @@ export default function AdminPanel() {
 
             const headers = {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'Origin': window.location.origin
+                'Authorization': `Bearer ${token}`
             };
 
             const [categoriesRes, productsRes, ingredientsRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/category`, {
-                    headers,
-                    mode: 'cors'
-                }),
-                fetch(`${API_BASE_URL}/product`, {
-                    headers,
-                    mode: 'cors'
-                }),
-                fetch(`${API_BASE_URL}/ingredient`, {
-                    headers,
-                    mode: 'cors'
-                })
+                fetch(`${API_BASE_URL}/category`, { headers }),
+                fetch(`${API_BASE_URL}/product`, { headers }),
+                fetch(`${API_BASE_URL}/ingredient`, { headers })
             ]);
-
-            if (!categoriesRes.ok) throw new Error('Ошибка загрузки категорий');
-            if (!productsRes.ok) throw new Error('Ошибка загрузки продуктов');
-            if (!ingredientsRes.ok) throw new Error('Ошибка загрузки ингредиентов');
 
             const categoriesData = await categoriesRes.json();
             const productsData = await productsRes.json();
             const ingredientsData = await ingredientsRes.json();
 
-            const enrichedProducts = productsData.map((product: any) => ({
-                ...product,
-                ingredients: product.ingredients?.map((ing: any) => ({
-                    ...ing,
-                    name: ingredientsData.find((i: Ingredient) => i.id === ing.ingredient_id)?.name || 'Неизвестный ингредиент'
-                })) || []
-            }));
-
-            setCategories(categoriesData);
-            setProducts(enrichedProducts);
             setAllIngredients(ingredientsData);
+            setCategories(categoriesData);
+            setProducts(productsData);
 
             if (categoriesData.length > 0) {
                 setNewProduct(prev => ({
@@ -141,7 +123,70 @@ export default function AdminPanel() {
             }
         } catch (error) {
             console.error('Ошибка загрузки данных:', error);
-            setError('Ошибка при загрузке данных. Проверьте соединение и попробуйте снова.');
+            setError('Ошибка при загрузке данных');
+        }
+    };
+
+    // Управление ингредиентами
+    const createIngredient = async () => {
+        if (!ingredientForm.name.trim()) {
+            setError('Введите название ингредиента');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
+
+            const response = await fetch(`${API_BASE_URL}/ingredient`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name: ingredientForm.name })
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка создания ингредиента');
+            }
+
+            const data = await response.json();
+            setAllIngredients([...allIngredients, data]);
+            setIngredientForm({ name: '' });
+            setSuccess(`Ингредиент "${data.name}" создан!`);
+            setTimeout(() => setSuccess(null), 3000);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            setError(error instanceof Error ? error.message : 'Ошибка создания ингредиента');
+        }
+    };
+
+    const deleteIngredient = async (id: number) => {
+        if (!confirm('Удалить этот ингредиент?')) return;
+
+        try {
+            const token = localStorage.getItem('employee_token');
+            if (!token) return;
+
+            const response = await fetch(`${API_BASE_URL}/ingredient/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка удаления ингредиента');
+            }
+
+            setAllIngredients(allIngredients.filter(i => i.id !== id));
+            setSuccess('Ингредиент удалён!');
+            setTimeout(() => setSuccess(null), 3000);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            setError(error instanceof Error ? error.message : 'Ошибка удаления ингредиента');
         }
     };
 
@@ -166,11 +211,9 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Origin': window.location.origin
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(newCategory),
-                mode: 'cors'
+                body: JSON.stringify(newCategory)
             });
 
             if (!response.ok) {
@@ -199,14 +242,12 @@ export default function AdminPanel() {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Origin': window.location.origin
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     name: editingCategory.name,
                     description: editedDescription
-                }),
-                mode: 'cors'
+                })
             });
 
             if (!response.ok) {
@@ -236,10 +277,8 @@ export default function AdminPanel() {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Origin': window.location.origin
-                },
-                mode: 'cors'
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             if (!response.ok) {
@@ -256,77 +295,44 @@ export default function AdminPanel() {
         }
     };
 
-    const addIngredient = async () => {
-        if (!newIngredient.ingredient_id && !newIngredient.name?.trim()) {
-            setError('Выберите ингредиент или введите название нового');
+    const addIngredientToProduct = () => {
+        if (!productIngredient.ingredient_id) {
+            setError('Выберите ингредиент');
             return;
         }
 
-        try {
-            let ingredientId = newIngredient.ingredient_id;
-            let ingredientName = newIngredient.name;
-
-            if (!ingredientId && newIngredient.name) {
-                const token = localStorage.getItem('employee_token');
-                if (!token) return;
-
-                const response = await fetch(`${API_BASE_URL}/ingredient`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                        'Origin': window.location.origin
-                    },
-                    body: JSON.stringify({ name: newIngredient.name }),
-                    mode: 'cors'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Ошибка создания ингредиента');
-                }
-
-                const data = await response.json();
-                ingredientId = data.id;
-                ingredientName = data.name;
-                setAllIngredients([...allIngredients, data]);
-            }
-
-            if (!ingredientId) {
-                throw new Error('Не удалось определить ID ингредиента');
-            }
-
-            setNewProduct(prev => ({
-                ...prev,
-                ingredients: [
-                    ...prev.ingredients,
-                    {
-                        ingredient_id: ingredientId!,
-                        quantity: newIngredient.quantity,
-                        unit: newIngredient.unit,
-                        name: ingredientName || allIngredients.find(i => i.id === ingredientId)?.name
-                    }
-                ]
-            }));
-
-            setNewIngredient({
-                ingredient_id: undefined,
-                name: '',
-                quantity: 1,
-                unit: ''
-            });
-        } catch (error) {
-            console.error('Ошибка:', error);
-            setError(error instanceof Error ? error.message : 'Ошибка добавления ингредиента');
+        const selectedIngredient = allIngredients.find(i => i.id === productIngredient.ingredient_id);
+        if (!selectedIngredient) {
+            setError('Ингредиент не найден');
+            return;
         }
+
+        setNewProduct(prev => ({
+            ...prev,
+            ingredients: [
+                ...prev.ingredients,
+                {
+                    id: Date.now(),
+                    ingredient_id: productIngredient.ingredient_id,
+                    name: selectedIngredient.name,
+                    quantity: productIngredient.quantity,
+                    unit: productIngredient.unit
+                }
+            ]
+        }));
+
+        setProductIngredient({
+            ingredient_id: 0,
+            quantity: 1,
+            unit: ''
+        });
     };
 
-    const removeIngredient = (index: number) => {
-        const newIngredients = [...newProduct.ingredients];
-        newIngredients.splice(index, 1);
-        setNewProduct({
-            ...newProduct,
-            ingredients: newIngredients
-        });
+    const removeIngredientFromProduct = (index: number) => {
+        setNewProduct(prev => ({
+            ...prev,
+            ingredients: prev.ingredients.filter((_, i) => i !== index)
+        }));
     };
 
     const saveProduct = async () => {
@@ -336,9 +342,10 @@ export default function AdminPanel() {
         }
 
         try {
-            const formData = new FormData();
             const token = localStorage.getItem('employee_token');
             if (!token) return;
+
+            const formData = new FormData();
 
             formData.append('name', newProduct.name);
             formData.append('price', newProduct.price.toString());
@@ -348,17 +355,14 @@ export default function AdminPanel() {
             formData.append('fats', newProduct.fats.toString());
             formData.append('carbohydrates', newProduct.carbohydrates.toString());
             formData.append('amount', newProduct.amount.toString());
+            formData.append('category_id', newProduct.category.id.toString());
 
-            if (newProduct.category) {
-                formData.append('category_id', newProduct.category.id.toString());
-            }
-
-            const ingredientsData = newProduct.ingredients.map(ing => ({
+            const ingredientsToSend = newProduct.ingredients.map(ing => ({
                 id: ing.ingredient_id,
                 quantity: ing.quantity,
                 unit: ing.unit
             }));
-            formData.append('ingredients', JSON.stringify(ingredientsData));
+            formData.append('ingredients', JSON.stringify(ingredientsToSend));
 
             if (productImage) {
                 formData.append('image', productImage);
@@ -372,28 +376,20 @@ export default function AdminPanel() {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Origin': window.location.origin
+                    'Authorization': `Bearer ${token}`
                 },
-                body: formData,
-                mode: 'cors'
+                body: formData
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                console.error('Ошибка сервера:', error);
-                throw new Error(error.message || 'Ошибка сохранения продукта');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка сохранения продукта');
             }
 
-            const savedProduct = await response.json();
-            setProducts(prev =>
-                newProduct.id
-                    ? prev.map(p => p.id === newProduct.id ? savedProduct : p)
-                    : [...prev, savedProduct]
-            );
+            await fetchData();
 
             resetProductForm();
-            setSuccess(`Продукт "${savedProduct.name}" успешно сохранён!`);
+            setSuccess(`Продукт "${newProduct.name}" успешно сохранён!`);
             setTimeout(() => setSuccess(null), 3000);
         } catch (error) {
             console.error('Ошибка:', error);
@@ -412,10 +408,8 @@ export default function AdminPanel() {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Origin': window.location.origin
-                },
-                mode: 'cors'
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             if (!response.ok) {
@@ -465,6 +459,45 @@ export default function AdminPanel() {
 
             {error && <div className={textStylesPanel.errorText}>{error}</div>}
             {success && <div className={textStylesPanel.successText}>{success}</div>}
+
+            {/* Блок для управления ингредиентами */}
+            <section className={textStylesPanel.section}>
+                <h2 className={textStylesPanel.sectionTitle}>Управление ингредиентами</h2>
+                <div className="flex flex-col gap-4 mb-6">
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={ingredientForm.name}
+                            onChange={(e) => setIngredientForm({ name: e.target.value })}
+                            className={textStylesPanel.input}
+                            placeholder="Название ингредиента"
+                        />
+                        <button
+                            onClick={createIngredient}
+                            className={textStylesPanel.successButton}
+                        >
+                            Добавить ингредиент
+                        </button>
+                    </div>
+                </div>
+
+                <div className={textStylesPanel.gridCols3}>
+                    {allIngredients.map(ingredient => (
+                        <div key={ingredient.id} className={textStylesPanel.categoryCard}>
+                            <div className="flex justify-between items-center">
+                                <span className="font-medium">{ingredient.name}</span>
+                                <button
+                                    onClick={() => deleteIngredient(ingredient.id)}
+                                    className="text-red-600 hover:text-red-800 p-1"
+                                    title="Удалить ингредиент"
+                                >
+                                    ❌
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
             <section className={textStylesPanel.section}>
                 <h2 className={textStylesPanel.sectionTitle}>Управление категориями</h2>
@@ -707,25 +740,11 @@ export default function AdminPanel() {
                     <h3 className="font-medium mb-2">Состав продукта:</h3>
                     <div className="flex flex-wrap gap-2 mb-2">
                         <select
-                            value={newIngredient.ingredient_id || ''}
-                            onChange={(e) => {
-                                const selected = allIngredients.find(i => i.id === Number(e.target.value));
-                                if (selected) {
-                                    setNewIngredient({
-                                        ingredient_id: selected.id,
-                                        name: selected.name,
-                                        quantity: newIngredient.quantity,
-                                        unit: newIngredient.unit
-                                    });
-                                } else {
-                                    setNewIngredient({
-                                        ingredient_id: undefined,
-                                        name: '',
-                                        quantity: 1,
-                                        unit: ''
-                                    });
-                                }
-                            }}
+                            value={productIngredient.ingredient_id || ''}
+                            onChange={(e) => setProductIngredient({
+                                ...productIngredient,
+                                ingredient_id: Number(e.target.value)
+                            })}
                             className={textStylesPanel.select}
                         >
                             <option value="">Выберите ингредиент</option>
@@ -734,26 +753,32 @@ export default function AdminPanel() {
                             ))}
                         </select>
 
-                        {!newIngredient.ingredient_id && (
-                            <input
-                                type="text"
-                                value={newIngredient.name || ''}
-                                onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
-                                className={textStylesPanel.input}
-                                placeholder="Название нового ингредиента"
-                            />
-                        )}
-
                         <input
                             type="text"
-                            value={newIngredient.unit}
-                            onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })}
+                            value={productIngredient.unit}
+                            onChange={(e) => setProductIngredient({
+                                ...productIngredient,
+                                unit: e.target.value
+                            })}
                             className={textStylesPanel.input}
                             placeholder="Единица измерения"
                         />
 
+                        <input
+                            type="number"
+                            value={productIngredient.quantity}
+                            onChange={(e) => setProductIngredient({
+                                ...productIngredient,
+                                quantity: Number(e.target.value)
+                            })}
+                            className={textStylesPanel.input}
+                            placeholder="Количество"
+                            min="0.1"
+                            step="0.1"
+                        />
+
                         <button
-                            onClick={addIngredient}
+                            onClick={addIngredientToProduct}
                             className={textStylesPanel.successButton}
                         >
                             Добавить
@@ -766,14 +791,14 @@ export default function AdminPanel() {
                                 <div key={index} className={textStylesPanel.ingredientItem}>
                                     <div>
                                         <span className={textStylesPanel.ingredientName}>
-                                            {ing.name || 'Неизвестный ингредиент'}
+                                            {ing.name}
                                         </span>
                                         <span className={textStylesPanel.ingredientQuantity}>
                                             {ing.quantity} {ing.unit}
                                         </span>
                                     </div>
                                     <button
-                                        onClick={() => removeIngredient(index)}
+                                        onClick={() => removeIngredientFromProduct(index)}
                                         className="text-red-600 hover:text-red-800 p-1"
                                     >
                                         ×
@@ -895,7 +920,7 @@ export default function AdminPanel() {
                                                         <ul className="text-sm text-gray-600 space-y-1">
                                                             {product.ingredients.map((ing, i) => (
                                                                 <li key={i} className="flex justify-between">
-                                                                    <span>{ing.name || 'Неизвестный ингредиент'}</span>
+                                                                    <span>{ing.name}</span>
                                                                     <span>{ing.quantity} {ing.unit}</span>
                                                                 </li>
                                                             ))}
