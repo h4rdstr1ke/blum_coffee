@@ -18,7 +18,7 @@ export default function ShopPage() {
         <div className="w-full flex justify-end px-4 py-2">
           <Link
             to="/admin"
-            className="bg-[#7EDAFF] text-xl text-white text-center w-[20%] px-4 py-2 rounded-lg hover:bg-[#2fb0e6] transition-colors forma-textBold"
+            className="bg-[#7EDAFF] text-xl text-white text-center  md:w-[20%] px-4 py-2 rounded-lg hover:bg-[#2fb0e6] transition-colors forma-textBold"
           >
             Админ-панель
           </Link>

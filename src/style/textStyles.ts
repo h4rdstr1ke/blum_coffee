@@ -510,7 +510,7 @@ export const textStylesEmployeeOrders = {
   orderMetaLabel: "text-gray-500 forma-textRegular tracking-wider",
   orderMetaValue: "text-gray-800 forma-textRegular tracking-wider",
   orderStatus: (status: string) => `
-    px-3 py-1 rounded-full text-sm font-medium forma-textBold
+    px-3 py-1 text-center rounded-full text-sm font-medium forma-textBold
     ${status === "Готовится" ? 'bg-blue-100 text-blue-800' :
       status === "Завершен" ? 'bg-green-100 text-green-800' :
         'bg-red-100 text-red-800'}

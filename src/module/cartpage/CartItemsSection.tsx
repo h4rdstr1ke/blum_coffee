@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { cartStyles } from '../../style/textStyles';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../../context/CartContext';
 
 export default function CartItemsSection({
     items,
@@ -11,6 +12,24 @@ export default function CartItemsSection({
     handleSubmitOrder,
     isSubmitting
 }: any) {
+    const { clearCart } = useCart();
+    const originalError = console.error;
+    console.error = (...args) => {
+        if (!args.some(arg => arg?.toString()?.includes('result.data is undefined'))) {
+            originalError(...args);
+        }
+    };
+    const handleSubmit = async () => {
+        try {
+
+            await handleSubmitOrder();
+            // После успешного оформления очищаем корзину
+            clearCart();
+        } catch (error) {
+            console.error('Ошибка при оформлении заказа:', error);
+
+        }
+    };
     return (
         <div className={cartStyles.cartContainer}>
             <h2 className={`${cartStyles.sectionTitle} !text-[40px] mb-6`}>Ваш заказ ({totalItems} шт.)</h2>
@@ -135,7 +154,7 @@ export default function CartItemsSection({
 
                             <div className="flex flex-col items-end space-y-6">
                                 <motion.button
-                                    onClick={handleSubmitOrder}
+                                    onClick={handleSubmit}
                                     disabled={items.length === 0 || isSubmitting}
                                     className={`${cartStyles.submitButton} ${items.length === 0 || isSubmitting
                                         ? cartStyles.disabledButton

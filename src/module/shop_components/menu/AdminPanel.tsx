@@ -921,7 +921,7 @@ export default function AdminPanel() {
                                                             {product.ingredients.map((ing, i) => (
                                                                 <li key={i} className="flex justify-between">
                                                                     <span>{ing.name}</span>
-                                                                    <span>{ing.quantity} {ing.unit}</span>
+                                                                    <span>{ing.unit}</span>
                                                                 </li>
                                                             ))}
                                                         </ul>
