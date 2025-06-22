@@ -59,8 +59,14 @@ export default function CartPage() {
             const now = new Date();
 
             if (deliveryOption.time === 'asap') {
-                // Для "как можно скорее" используем текущее время
-                completionDateTime = now.toISOString().replace('T', ' ').slice(0, 16);
+                const asapTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 час
+                const year = asapTime.getFullYear();
+                const month = String(asapTime.getMonth() + 1).padStart(2, '0');
+                const day = String(asapTime.getDate()).padStart(2, '0');
+                const hours = String(asapTime.getHours()).padStart(2, '0');
+                const minutes = String(asapTime.getMinutes()).padStart(2, '0');
+
+                completionDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
             } else {
                 // Для выбранного времени используем текущую дату + выбранное время
                 const [hours, minutes] = deliveryOption.customTime.split(':');
