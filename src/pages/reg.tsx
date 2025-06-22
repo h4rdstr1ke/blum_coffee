@@ -28,6 +28,7 @@ export default function RegPage() {
     const [nameError, setNameError] = useState('');
     const [surnameError, setSurnameError] = useState('');
     const [localError, setLocalError] = useState('');
+    const [receivedCode, setReceivedCode] = useState('');
 
     useEffect(() => {
         if (apiError) {
@@ -183,10 +184,18 @@ export default function RegPage() {
 
         try {
             const phoneToSend = '7' + cleanedPhone;
-            await sendCode(phoneToSend);
+            const response = await sendCode(phoneToSend);
+
+            if (response && response.code) {
+                setReceivedCode(response.code.toString());
+            } else {
+                setReceivedCode("Код отправлен! Проверьте консоль разработчика");
+            }
+
             setCodeSent(true);
         } catch (err) {
-            console.error(err);
+            console.error('Ошибка при отправке кода:', err);
+            setLocalError('Ошибка при отправке кода');
         }
     };
 
@@ -237,9 +246,9 @@ export default function RegPage() {
         setName('');
         setSurname('');
         setCodeSent(false);
+        setReceivedCode('');
         setMode(newMode);
 
-        // Для режима сотрудникадефолтные значения
         if (newMode === 'employee') {
             setLogin('');
             setPassword('');
@@ -299,6 +308,19 @@ export default function RegPage() {
                         <p className={textStylesReg.codeSentMessage}>
                             Код отправлен на номер {phone}
                         </p>
+
+                        {receivedCode && (
+                            <div className="p-3 bg-yellow-100 rounded text-center text-lg font-medium mb-4">
+                                {receivedCode.match(/^\d+$/) ? (
+                                    <>
+                                        Ваш код подтверждения: <strong>{receivedCode}</strong>
+                                    </>
+                                ) : (
+                                    receivedCode
+                                )}
+                            </div>
+                        )}
+
                         <div>
                             <label className={textStylesReg.inputLabel}>Код подтверждения</label>
                             <input
@@ -362,6 +384,7 @@ export default function RegPage() {
                                 clearAllErrors();
                                 setCode('');
                                 setCodeSent(false);
+                                setReceivedCode('');
                             }}
                             className={textStylesReg.secondaryButton}
                         >

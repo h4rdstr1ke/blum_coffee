@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+interface SendCodeResponse {
+    message: string;
+    code: number;
+}
+
 interface ProfileData {
     name: string;
     surname: string;
@@ -19,7 +24,7 @@ interface UserContextType {
     isEmployee: boolean;
     logout: () => void;
     loginEmployee: (login: string, password: string) => Promise<void>;
-    sendCode: (phone: string) => Promise<void>;
+    sendCode: (phone: string) => Promise<SendCodeResponse>;
     loginUser: (phone: string, code: string) => Promise<void>;
     registerUser: (phone: string, code: string, name: string, surname: string) => Promise<void>;
 }
@@ -115,10 +120,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 body: JSON.stringify({ phone_number: phone })
             });
 
+            const data = await response.json(); // парсинг ответа
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Ошибка отправки кода');
+                throw new Error(data.message || 'Ошибка отправки кода');
             }
+
+            return data; // данные ответа
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Ошибка отправки кода');
             throw err;
