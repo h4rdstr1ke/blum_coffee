@@ -107,10 +107,10 @@ export default function CartPage() {
             }
 
             const result = await response.json();
-            console.log('Order created:', result);
-            alert(`Заказ #${result.data.id} успешно оформлен!`);
+            // console.log('Ответ сервера:', result); // Для отладки
+            const orderId = result.data?.id || result.id || 'номер неизвестен';
+            alert(`Заказ #${orderId} успешно оформлен!`);
             clearCart();
-            navigate('/profile');
         } catch (error) {
             console.error('Order error:', error);
             setOrderError(error instanceof Error ? error.message : 'Неизвестная ошибка');
