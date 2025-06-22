@@ -638,5 +638,6 @@ export const textStylesPanel = {
   // Разное
   divider: "my-6 border-t border-gray-200",
   errorText: "text-red-600 text-sm",
-  successText: "text-green-600 text-sm"
+  successText: "text-green-600 text-sm",
+
 };

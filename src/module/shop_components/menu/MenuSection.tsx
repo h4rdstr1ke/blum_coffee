@@ -25,9 +25,7 @@ interface Product {
     } | null;
     ingredients: {
         ingredient_id: number;
-        quantity: number;
-        unit: string;
-        name?: string;
+        name: string;
     }[];
     image?: string;
 }
@@ -114,9 +112,7 @@ export default function MenuSection() {
                             src: p.image || '/image/placeholder-product.jpg',
                             info: {
                                 weight: `${p.weight} г`,
-                                composition: p.ingredients.map(ing =>
-                                    `${ing.name || 'Ингредиент'} - ${ing.unit}`
-                                ),
+                                composition: p.ingredients.map(ing => ing.name),
                                 calories: p.energy_value.toString(),
                                 proteins: p.proteins.toString(),
                                 fats: p.fats.toString(),

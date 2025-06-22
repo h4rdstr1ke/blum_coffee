@@ -18,8 +18,6 @@ interface ProductIngredient {
     id: number;
     ingredient_id: number;
     name: string;
-    quantity: number;
-    unit: string;
 }
 
 interface Product {
@@ -65,12 +63,8 @@ export default function AdminPanel() {
     });
     const [productIngredient, setProductIngredient] = useState<{
         ingredient_id: number;
-        quantity: number;
-        unit: string;
     }>({
         ingredient_id: 0,
-        quantity: 1,
-        unit: ''
     });
     const [ingredientForm, setIngredientForm] = useState({
         name: ''
@@ -127,7 +121,6 @@ export default function AdminPanel() {
         }
     };
 
-    // Управление ингредиентами
     const createIngredient = async () => {
         if (!ingredientForm.name.trim()) {
             setError('Введите название ингредиента');
@@ -314,17 +307,13 @@ export default function AdminPanel() {
                 {
                     id: Date.now(),
                     ingredient_id: productIngredient.ingredient_id,
-                    name: selectedIngredient.name,
-                    quantity: productIngredient.quantity,
-                    unit: productIngredient.unit
+                    name: selectedIngredient.name
                 }
             ]
         }));
 
         setProductIngredient({
-            ingredient_id: 0,
-            quantity: 1,
-            unit: ''
+            ingredient_id: 0
         });
     };
 
@@ -358,9 +347,7 @@ export default function AdminPanel() {
             formData.append('category_id', newProduct.category.id.toString());
 
             const ingredientsToSend = newProduct.ingredients.map(ing => ({
-                id: ing.ingredient_id,
-                quantity: ing.quantity,
-                unit: ing.unit
+                id: ing.ingredient_id
             }));
             formData.append('ingredients', JSON.stringify(ingredientsToSend));
 
@@ -460,7 +447,6 @@ export default function AdminPanel() {
             {error && <div className={textStylesPanel.errorText}>{error}</div>}
             {success && <div className={textStylesPanel.successText}>{success}</div>}
 
-            {/* Блок для управления ингредиентами */}
             <section className={textStylesPanel.section}>
                 <h2 className={textStylesPanel.sectionTitle}>Управление ингредиентами</h2>
                 <div className="flex flex-col gap-4 mb-6">
@@ -753,35 +739,11 @@ export default function AdminPanel() {
                             ))}
                         </select>
 
-                        <input
-                            type="text"
-                            value={productIngredient.unit}
-                            onChange={(e) => setProductIngredient({
-                                ...productIngredient,
-                                unit: e.target.value
-                            })}
-                            className={textStylesPanel.input}
-                            placeholder="Укажите название ингридиента"
-                        />
-
-                        {/* <input
-                            type="number"
-                            value={productIngredient.quantity}
-                            onChange={(e) => setProductIngredient({
-                                ...productIngredient,
-                                quantity: Number(e.target.value)
-                            })}
-                            className={textStylesPanel.input}
-                            placeholder="Количество"
-                            min="0.1"
-                            step="0.1"
-                        />*/}
-
                         <button
                             onClick={addIngredientToProduct}
                             className={textStylesPanel.successButton}
                         >
-                            Добавить
+                            Добавить ингредиент
                         </button>
                     </div>
 
@@ -789,14 +751,9 @@ export default function AdminPanel() {
                         <div className="space-y-2">
                             {newProduct.ingredients.map((ing, index) => (
                                 <div key={index} className={textStylesPanel.ingredientItem}>
-                                    <div>
-                                        <span className={textStylesPanel.ingredientName}>
-                                            {ing.name}
-                                        </span>
-                                        <span className={textStylesPanel.ingredientQuantity}>
-                                            {ing.quantity} {ing.unit}
-                                        </span>
-                                    </div>
+                                    <span className={textStylesPanel.ingredientName}>
+                                        {ing.name}
+                                    </span>
                                     <button
                                         onClick={() => removeIngredientFromProduct(index)}
                                         className="text-red-600 hover:text-red-800 p-1"
@@ -919,10 +876,7 @@ export default function AdminPanel() {
                                                         <h5 className="font-medium text-sm mb-1">Состав:</h5>
                                                         <ul className="text-sm text-gray-600 space-y-1">
                                                             {product.ingredients.map((ing, i) => (
-                                                                <li key={i} className="flex justify-between">
-                                                                    <span>{ing.name}</span>
-                                                                    <span>{ing.unit}</span>
-                                                                </li>
+                                                                <li key={i}>{ing.name}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
